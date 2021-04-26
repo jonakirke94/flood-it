@@ -1,0 +1,25 @@
+{
+  "name": "flood-it",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "eslint-plugin-prettier": "^3.4.0",
+    "vue": "^3.0.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.2.2",
+    "@vue/compiler-sfc": "^3.0.5",
+    "autoprefixer": "^10.2.5",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-vue": "^7.0.0-beta.4",
+    "postcss": "^8.2.12",
+    "prettier": "^2.2.1",
+    "tailwindcss": "^2.1.2",
+    "vite": "^2.2.3"
+  }
+}

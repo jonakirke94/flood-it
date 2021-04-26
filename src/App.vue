@@ -1,6 +1,12 @@
 <template>
-  Total clicks = {{ clicks }}
-  <div class="flex flex-wrap max-w-screen-md mx-auto" style="width: 600px">
+  <div class="flex flex-col">
+    <span>Floods {{ clicks }}/25</span>
+    <span>Has won? {{ hasWon }}</span>
+  </div>
+  <div
+    class="flex flex-wrap max-w-screen-md mx-auto transition-all duration-700"
+    :style="`width:600px;transform: rotate(${rotated}deg)`"
+  >
     <div
       v-for="(col, j) in board.flat()"
       :key="j"
@@ -8,12 +14,15 @@
       :style="{
         height: `${600 / board.length}px`,
         width: `${600 / board.length}px`,
-        fontSize: '8px',
       }"
-      class="flex flex-wrap flex-shrink-0"
-    ></div>
+      class="flex flex-wrap flex-shrink-0 text-white justify-center items-center"
+    >
+      <span v-if="col.powerUp === 'bomb'">B</span>
+      <span v-if="col.powerUp === 'rotate'">R</span>
+    </div>
   </div>
 
+  <button class="h-12 w-12 mt-12 bg-gray-500" @click="rotate">ROT</button>
   <button class="h-12 w-12 mt-12 bg-red-500" @click="floodFill('RED')">r</button>
   <button class="h-12 w-12 bg-green-500" @click="floodFill('GREEN')">g</button>
   <button class="h-12 w-12 bg-yellow-500" @click="floodFill('YELLOW')">y</button>
@@ -27,10 +36,13 @@ import useGameState from './composables/use-game-state';
 
 import useKeydown from './composables/use-keydown';
 
+import { ref } from 'vue';
+
 export default {
   setup() {
-    const { generateBoard, board, floodFill, clicks } = useGameState();
+    const { generateBoard, board, floodFill, clicks, hasWon } = useGameState();
 
+    let rotated = ref(0);
     generateBoard();
 
     useKeydown([
@@ -46,7 +58,14 @@ export default {
       board,
       floodFill,
       clicks,
+      rotated,
+      hasWon,
     };
+  },
+  methods: {
+    rotate() {
+      this.rotated += 90;
+    },
   },
 };
 </script>

@@ -1,4 +1,5 @@
-const GRID_SIZE = 30;
+const GRID_SIZE = 10;
+const MAX_FLOODS = 25;
 
 const colors = new Map();
 
@@ -23,12 +24,16 @@ validNeighbours[neighbour.BOTTOM] = (x, _y) => x < GRID_SIZE;
 validNeighbours[neighbour.RIGHT] = (_x, y) => y < GRID_SIZE;
 
 import { reactive, ref } from 'vue';
+import usePowerUps from './use-power-ups';
 
 const board = reactive([]);
 
 const clicks = ref(0);
+const hasWon = ref(false);
 
 export const useGameState = function () {
+  const { getPowerUp, turnedPowerUps } = usePowerUps();
+
   const getColorKey = () => {
     const rnd = Math.floor(Math.random() * colors.size);
     return [...colors.keys()][rnd];
@@ -43,6 +48,7 @@ export const useGameState = function () {
           color: colors.get(colorKey),
           x,
           y,
+          powerUp: getPowerUp(),
           id: `${x}-${y}`,
         });
       });
@@ -51,8 +57,20 @@ export const useGameState = function () {
     });
   };
 
+  const checkIfWon = function (color) {
+    const colorVal = colors.get(color);
+    hasWon.value = board.flat().every((x) => x.color === colorVal);
+  };
+
   const floodFill = function (color) {
-    clicks.value++;
+    if (clicks.value >= MAX_FLOODS) {
+      console.warn('Already used max clicks');
+      return;
+    }
+
+    if (hasWon.value) {
+      console.warn('The game is already won');
+    }
 
     const seenTiles = new Set();
     const stack = [];
@@ -81,6 +99,7 @@ export const useGameState = function () {
       stack.push(initialTile);
 
       while (stack.length) {
+        console.log('running stack');
         // take the current tile
         const curr = stack.pop();
 
@@ -91,8 +110,16 @@ export const useGameState = function () {
         curr.color = colors.get(color);
 
         getNeighbours(curr.x, curr.y).forEach((neighbour) => {
+          if (!seenTiles.has(neighbour.id) && neighbour.powerUp) {
+            console.log('powerup', neighbour.powerUp);
+          }
+
           // skip if already seen
-          if (!seenTiles.has(neighbour.id) && neighbour.color === initialColor) {
+          if (seenTiles.has(neighbour.id)) {
+            console.log('already seen tile');
+            return;
+          } else if (!seenTiles.has(neighbour.id) && neighbour.color === initialColor) {
+            console.log('pushing to stack');
             stack.push(neighbour);
           }
         });
@@ -100,6 +127,10 @@ export const useGameState = function () {
     };
 
     fill(initialTile);
+
+    clicks.value++;
+
+    checkIfWon(color);
   };
 
   return {
@@ -107,6 +138,7 @@ export const useGameState = function () {
     board,
     floodFill,
     clicks,
+    hasWon,
   };
 };
 

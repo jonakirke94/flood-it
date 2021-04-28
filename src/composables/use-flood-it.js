@@ -1,6 +1,7 @@
 import useNeighbours from './use-neighbours';
 import useAnimations from './use-animations';
 import usePowerUps from './use-power-ups';
+import { nextTick } from 'vue';
 
 const floodedTiles = new Map();
 
@@ -10,7 +11,7 @@ let useFloodIt = (board) => {
 
   const { addPowerUpIfExists } = usePowerUps();
 
-  const floodFill = (initialTile, newColor, doneCallback) => {
+  const floodFill = (initialTile, newColor) => {
     const fillFromTile = () => {
       floodedTiles.clear();
 
@@ -31,7 +32,8 @@ let useFloodIt = (board) => {
 
           if (tile.colorKey === prevColor) {
             tile.colorKey = newColor;
-            tile.delay = getNextDelay(tile);
+            tile.animationDelay = tile.id === firstTile.id ? 0 : getNextDelay(tile);
+            tile.animated = true;
             floodedTiles.set(tile.id, tile);
           }
 
@@ -44,7 +46,8 @@ let useFloodIt = (board) => {
           if (floodedTiles.has(tile.id) || tile.colorKey !== newColor) continue;
 
           if (tile.colorKey === newColor) {
-            tile.delay = getNextDelay(tile);
+            tile.animationDelay = getNextDelay(tile);
+            tile.animated = true;
             floodedTiles.set(tile.id, tile);
 
             addPowerUpIfExists(tile);
@@ -59,7 +62,8 @@ let useFloodIt = (board) => {
     };
 
     fillFromTile();
-    doneCallback(floodedTiles);
+
+    console.log('done traversing');
   };
 
   return {

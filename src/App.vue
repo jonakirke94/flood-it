@@ -3,10 +3,8 @@
     <div class="flex flex-col">
       <span>Floods {{ clicks }}/25</span>
       <span>Has won? {{ hasWon }}</span>
-
-      List: {{ turnedPowerUps }}
     </div>
-    <tile-board :tiles="board" @on-render="setRefs"></tile-board>
+    <tile-board :tiles="board"></tile-board>
 
     <power-up-list :power-ups="turnedPowerUps"></power-up-list>
 
@@ -19,12 +17,13 @@
 <script>
 import useGameState from './composables/use-game-state';
 import useOptions from './composables/use-options';
-import useAnimations from './composables/use-animations';
 import usePowerUps from './composables/use-power-ups';
 
 import FloodButtonList from './components/FloodButtonList.vue';
 import PowerUpList from './components/PowerUpList.vue';
 import TileBoard from './components/TileBoard.vue';
+
+import { provide } from 'vue';
 
 export default {
   components: {
@@ -33,32 +32,27 @@ export default {
     TileBoard,
   },
   setup() {
-    const { instantiateGame, playRound, clicks, hasWon, board, reset } = useGameState();
+    const { instantiateGame, playRound, clicks, hasWon, board, reset, startTileId } = useGameState();
     const { colors } = useOptions();
-    const { animateList, addInitialColors } = useAnimations();
-    const { turnedPowerUps, resetPowerUps } = usePowerUps();
-
-    let itemRefs = new Map();
+    const { turnedPowerUps, resetPowerUps, activePowerUpId } = usePowerUps();
 
     const newGame = () => {
       reset();
       resetPowerUps();
-      instantiateGame((tiles) => {
-        addInitialColors(tiles, itemRefs);
-      });
+      instantiateGame();
     };
 
     newGame();
 
-    const callPlayRound = (color) => {
-      playRound(color, (res) => {
-        animateList(res, itemRefs);
-      });
+    const callPlayRound = (color, tileIdToFlood = null) => {
+      playRound(color, tileIdToFlood);
     };
 
-    const setRefs = (refs) => {
-      itemRefs = refs;
-    };
+    provide('startTileId', startTileId);
+    provide('activePowerUpId', activePowerUpId);
+
+    // we dont need to inject this because we dont use a callback anymore
+    provide('callPlayRound', callPlayRound);
 
     return {
       board,
@@ -68,7 +62,6 @@ export default {
       hasWon,
       colors,
       turnedPowerUps,
-      setRefs,
     };
   },
 };

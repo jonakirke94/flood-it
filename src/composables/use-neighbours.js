@@ -42,7 +42,7 @@ let useNeighbours = (board) => {
 
     stack.push(
       ...neighbours.map((nb) => {
-        nb.origin = tile.delay;
+        nb.origin = tile.animationDelay;
         return nb;
       })
     );

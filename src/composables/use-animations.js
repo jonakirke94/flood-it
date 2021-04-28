@@ -6,8 +6,9 @@ let useAnimations = () => {
 
   const ANIMATION_INCREMENT_IN_MS = 50;
 
-  const animate = (domElement, color) => {
+  /* const animate = (domElement, color) => {
     const className = `box-${color.toLowerCase()}`;
+    console.log(className, 'className');
     const removeClass = () => {
       domElement.classList.remove(...colors.values(), className);
       domElement.classList.add(colors.get(color));
@@ -17,36 +18,19 @@ let useAnimations = () => {
     domElement.addEventListener('animationend', removeClass);
     domElement.classList.add(className);
   };
-  const animateList = (tileMap, domMap) => {
+  const animateList = (tileMap) => {
     nextTick(() => {
-      tileMap.forEach(({ delay, colorKey }, id) => {
-        const domElement = domMap.get(id);
-        domElement.style.animationDelay = `${delay}ms`;
-
-        setTimeout(() => {
-          domElement.innerHTML = '';
-        }, delay);
-
-        animate(domElement, colorKey);
+      tileMap.forEach((tile) => {
+        tile.animated = true;
       });
     });
-  };
-
-  const addInitialColors = (tiles, itemRefs) => {
-    tiles.forEach((tile) => {
-      const domElement = itemRefs.get(tile.id);
-      domElement.classList.remove(...colors.values());
-      domElement.classList.add(colors.get(tile.colorKey));
-    });
-  };
+  };*/
 
   const getNextDelay = (tile) => {
     return (tile.origin || 0) + ANIMATION_INCREMENT_IN_MS;
   };
 
   return {
-    animateList,
-    addInitialColors,
     getNextDelay,
   };
 };

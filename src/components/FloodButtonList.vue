@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <button class="h-12 w-12 mt-12 bg-red-500" @click="$emit('fill-pressed', 'RED')">r</button>
-    <button class="h-12 w-12 bg-green-500" @click="$emit('fill-pressed', 'GREEN')">g</button>
-    <button class="h-12 w-12 bg-yellow-500" @click="$emit('fill-pressed', 'YELLOW')">y</button>
-    <button class="h-12 w-12 bg-indigo-500" @click="$emit('fill-pressed', 'INDIGO')">i</button>
-    <button class="h-12 w-12 bg-teal-500" @click="$emit('fill-pressed', 'TEAL')">t</button>
-    <button class="h-12 w-12 bg-pink-500" @click="$emit('fill-pressed', 'PINK')">p</button>
-  </div>
+  <button class="h-12 w-12 mt-12 bg-blue-300" @click="$emit('fill-pressed', 'BLUE-300')">r</button>
+  <button class="h-12 w-12 bg-blue-500" @click="$emit('fill-pressed', 'BLUE-500')">g</button>
+  <button class="h-12 w-12 bg-blue-700" @click="$emit('fill-pressed', 'BLUE-700')">y</button>
+  <button class="h-12 w-12 bg-indigo-300" @click="$emit('fill-pressed', 'INDIGO-300')">i</button>
+  <button class="h-12 w-12 bg-indigo-500" @click="$emit('fill-pressed', 'INDIGO-500')">t</button>
+  <button class="h-12 w-12 bg-indigo-700" @click="$emit('fill-pressed', 'INDIGO-700')">p</button>
 </template>
 
 <script>
@@ -16,12 +14,12 @@ export default {
   emits: ['fill-pressed'],
   setup(_props, { emit }) {
     useKeydown([
-      { key: 'r', fn: () => emit('fill-pressed', 'RED') },
-      { key: 'g', fn: () => emit('fill-pressed', 'GREEN') },
-      { key: 'y', fn: () => emit('fill-pressed', 'YELLOW') },
-      { key: 'i', fn: () => emit('fill-pressed', 'INDIGO') },
-      { key: 't', fn: () => emit('fill-pressed', 'TEAL') },
-      { key: 'p', fn: () => emit('fill-pressed', 'PINK') },
+      { key: 'r', fn: () => emit('fill-pressed', 'BLUE-300') },
+      { key: 'g', fn: () => emit('fill-pressed', 'BLUE-500') },
+      { key: 'y', fn: () => emit('fill-pressed', 'BLUE-700') },
+      { key: 'i', fn: () => emit('fill-pressed', 'INDIGO-300') },
+      { key: 't', fn: () => emit('fill-pressed', 'INDIGO-500') },
+      { key: 'p', fn: () => emit('fill-pressed', 'INDIGO-700') },
     ]);
   },
 };

@@ -1,16 +1,42 @@
-import { ref } from 'vue';
+import { reactive } from 'vue';
+
+let turnedPowerUps = reactive([]);
+
+const firePowerUp = {
+  name: 'fire',
+};
+
+const healthPowerUp = {
+  name: 'health',
+};
 
 export const usePowerUps = function () {
-  const turnedPowerUps = ref(new Set());
-  const getPowerUp = () => {
-    const rnd = Math.floor(Math.random() * 20);
+  const getPowerUp = (gridSize) => {
+    const rnd = Math.floor(Math.random() * 25);
     if (rnd > 1) return '';
-    return ['bomb', 'rotate'][rnd];
+    return [firePowerUp, healthPowerUp][rnd];
+  };
+
+  const addPowerUpIfExists = (tile) => {
+    if (tile.powerUp) {
+      // delay add until the dom element is animated
+      setTimeout(() => {
+        turnedPowerUps.push(tile.powerUp);
+      }, tile.delay);
+    }
+  };
+
+  const resetPowerUps = () => {
+    while (turnedPowerUps.length) {
+      turnedPowerUps.pop();
+    }
   };
 
   return {
     getPowerUp,
+    addPowerUpIfExists,
     turnedPowerUps,
+    resetPowerUps,
   };
 };
 

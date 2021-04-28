@@ -1,140 +1,70 @@
-import useOptions from './use-options';
+import useNeighbours from './use-neighbours';
 import useAnimations from './use-animations';
-import { reactive } from 'vue';
+import usePowerUps from './use-power-ups';
 
-const board = reactive([]);
-const floodedTiles = new Set();
+const floodedTiles = new Map();
 
-let useFloodIt = () => {
-  let iteration = 1;
+let useFloodIt = (board) => {
+  const { getNextDelay } = useAnimations();
+  const { handleNeighbours } = useNeighbours(board);
 
-  const { randomColorKey, GRID_SIZE } = useOptions();
-  const { animateList } = useAnimations();
+  const { addPowerUpIfExists } = usePowerUps();
 
-  const neighbour = {
-    LEFT: 'left',
-    TOP: 'top',
-    BOTTOM: 'bottom',
-    RIGHT: 'right',
-  };
+  const floodFill = (initialTile, newColor, doneCallback) => {
+    const fillFromTile = () => {
+      floodedTiles.clear();
 
-  const validNeighbours = {};
-  validNeighbours[neighbour.LEFT] = (_x, y) => y >= 0;
-  validNeighbours[neighbour.TOP] = (x, _y) => x >= 0;
-  validNeighbours[neighbour.BOTTOM] = (x, _y) => x < GRID_SIZE;
-  validNeighbours[neighbour.RIGHT] = (_x, y) => y < GRID_SIZE;
+      const fill = (firstTile, prevColor, newColor) => {
+        firstTile.origin = 0;
+        const tileStack = [firstTile];
+        const lookaheadStack = [];
 
-  const generateBoard = () => {
-    Array.from({ length: GRID_SIZE }).forEach((_x, x) => {
-      const row = [];
-      Array.from({ length: GRID_SIZE }).forEach((_x, y) => {
-        row.push({
-          colorKey: randomColorKey(),
-          x,
-          y,
-          powerUp: '',
-          id: `${x}-${y}`,
-        });
-      });
+        while (tileStack.length) {
+          const tile = tileStack.shift();
 
-      board.push(row);
-    });
-  };
-
-  const floodFill = (newColor) => {
-    const getNeighbours = (x, y) => {
-      const tiles = [];
-
-      const addIfValid = (x, y, neighbour) => {
-        if (validNeighbours[neighbour](x, y)) {
-          tiles.push(board[x][y]);
-        }
-      };
-
-      addIfValid(x, y - 1, neighbour.LEFT);
-      addIfValid(x, y + 1, neighbour.RIGHT);
-      addIfValid(x - 1, y, neighbour.TOP);
-      addIfValid(x + 1, y, neighbour.BOTTOM);
-
-      return tiles;
-    };
-
-    const fill = (initialTile) => {
-      const visited = new Set();
-
-      const tileMap = new Map();
-
-      const ANIMATION_INCREMENT = 50;
-
-      const lookAheadRecursively = (tile, prevColor, newColor, delay) => {
-        if (visited.has(tile.id)) return;
-
-        if (tile.iteration === iteration) return;
-
-        if (tile.colorKey !== newColor) return;
-
-        if (tile.colorKey === newColor) {
-          floodedTiles.add(tile.id);
-          tile.iteration = iteration;
-
-          if (!visited.has(tile.id)) {
-            tileMap.set(tile.id, { delay: delay, color: tile.colorKey });
+          if (tile.colorKey === newColor) {
+            lookaheadStack.push(tile);
+            continue;
           }
-          if (tile.powerUp) {
-            // turnedPowerUps.value.add(tile.powerUp);
+
+          if (tile.colorKey !== prevColor || floodedTiles.has(tile.id)) continue;
+
+          if (tile.colorKey === prevColor) {
+            tile.colorKey = newColor;
+            tile.delay = getNextDelay(tile);
+            floodedTiles.set(tile.id, tile);
           }
+
+          handleNeighbours(tile, tileStack);
         }
 
-        const neighbours = getNeighbours(tile.x, tile.y);
+        while (lookaheadStack.length) {
+          const tile = lookaheadStack.shift();
 
-        const lockedDelay = delay;
-        neighbours.forEach((neighbour) => {
-          lookAheadRecursively(neighbour, prevColor, newColor, lockedDelay + ANIMATION_INCREMENT);
-        });
-      };
+          if (floodedTiles.has(tile.id) || tile.colorKey !== newColor) continue;
 
-      const fillRecursively = (tile, prevColor, newColor, delay = 0) => {
-        if (tile.colorKey === newColor) {
-          lookAheadRecursively(tile, prevColor, newColor, delay);
-          return;
+          if (tile.colorKey === newColor) {
+            tile.delay = getNextDelay(tile);
+            floodedTiles.set(tile.id, tile);
+
+            addPowerUpIfExists(tile);
+          }
+
+          handleNeighbours(tile, lookaheadStack);
         }
-
-        if (tile.colorKey !== prevColor) return;
-
-        if (visited.has(tile.id)) return;
-
-        if (tile.colorKey === prevColor) {
-          tile.colorKey = newColor;
-          floodedTiles.add(tile.id);
-          visited.add(tile.id);
-          tileMap.set(tile.id, { delay, color: tile.colorKey });
-        }
-
-        const neighbours = getNeighbours(tile.x, tile.y);
-
-        const lockedDelay = delay;
-        neighbours.forEach((neighbour) => {
-          fillRecursively(neighbour, prevColor, newColor, lockedDelay + ANIMATION_INCREMENT);
-        });
       };
 
       const prevColor = initialTile.colorKey;
-      fillRecursively(initialTile, prevColor, newColor);
-
-      iteration++;
-
-      return tileMap;
+      fill(initialTile, prevColor, newColor);
     };
 
-    const initialTile = board[0][0];
-    return fill(initialTile);
+    fillFromTile();
+    doneCallback(floodedTiles);
   };
 
   return {
     floodFill,
     floodedTiles,
-    generateBoard,
-    board,
   };
 };
 

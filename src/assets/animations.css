@@ -1,0 +1,99 @@
+:root {
+	--animation-duration: 0.75s;
+	--animation-easing: ease-in;
+  }
+  
+  .box-red {
+	animation: Box-fade-Red var(--animation-duration) var(--animation-easing);
+  }
+  
+  @keyframes Box-fade-Red {
+	0% {
+	  @apply bg-red-300;
+	}
+	50% {
+	  @apply bg-red-400;
+	}
+	100% {
+	  @apply bg-red-500;
+	}
+  }
+  
+  .box-green {
+	animation: Box-fade-Green var(--animation-duration) var(--animation-easing);
+  }
+  
+  @keyframes Box-fade-Green {
+	0% {
+	  @apply bg-green-300;
+	}
+	50% {
+	  @apply bg-green-400;
+	}
+	100% {
+	  @apply bg-green-500;
+	}
+  }
+  
+  .box-yellow {
+	animation: Box-fade-Yellow var(--animation-duration) var(--animation-easing);
+  }
+  @keyframes Box-fade-Yellow {
+	0% {
+	  @apply bg-yellow-300;
+	}
+	50% {
+	  @apply bg-yellow-400;
+	}
+	100% {
+	  @apply bg-yellow-500;
+	}
+  }
+  
+  .box-teal {
+	animation: Box-fade-Teal var(--animation-duration) var(--animation-easing);
+  }
+  
+  @keyframes Box-fade-Teal {
+	0% {
+	  @apply bg-teal-300;
+	}
+	50% {
+	  @apply bg-teal-400;
+	}
+	100% {
+	  @apply bg-teal-500;
+	}
+  }
+  
+  .box-indigo {
+	animation: Box-fade-Indigo var(--animation-duration) var(--animation-easing);
+  }
+  
+  @keyframes Box-fade-Indigo {
+	0% {
+	  @apply bg-indigo-300;
+	}
+	50% {
+	  @apply bg-indigo-400;
+	}
+	100% {
+	  @apply bg-indigo-500;
+	}
+  }
+  
+  .box-pink {
+	animation: Box-fade-Pink var(--animation-duration) var(--animation-easing);
+  }
+  
+  @keyframes Box-fade-Pink {
+	0% {
+	  @apply bg-pink-300;
+	}
+	50% {
+	  @apply bg-pink-400;
+	}
+	100% {
+	  @apply bg-pink-500;
+	}
+  }

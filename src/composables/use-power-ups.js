@@ -1,63 +1,64 @@
-import { reactive } from 'vue';
+import { reactive, computed, ref } from 'vue';
+import useId from './use-id';
+import useOptions from '../composables/use-options';
 
-let turnedPowerUps = reactive([]);
+let turnedPowerUps = reactive(new Map());
+let executedPowerUps = reactive(new Set());
+let activePowerUpId = ref('');
 
-// if we have multiple of the same powerups we need a unique identifier
-const POWER_UPS = [
-  {
-    id: 1,
-    name: 'fire',
-    type: 'ASYNC',
-  },
-  {
-    id: 2,
-    name: 'health',
-    type: 'INSTANT',
-  },
-  {
-    id: 3,
-    name: 'flag',
-    type: 'ASYNC',
-  },
-];
+const POWER_UPS = ['fire', 'flag', 'health'];
+
 export const usePowerUps = function () {
+  const { generateId } = useId();
+  const { GRID_SIZE } = useOptions();
+
+  const activePowerUp = computed(() => {
+    return turnedPowerUps.get(activePowerUpId.value);
+  });
+
+  const createPowerUp = (name) => {
+    return {
+      id: generateId(),
+      name,
+      type: name === 'health' ? 'INSTANT' : 'ASYNC',
+    };
+  };
+
   // TODO need to calculate probabilities here
   const getPowerUp = (gridSize) => {
-    const rnd = Math.floor(Math.random() * 15);
-    if (rnd > POWER_UPS.length) return '';
-    return POWER_UPS[rnd];
+    const rnd = Math.floor(Math.random() * (GRID_SIZE + 1));
+    if (rnd > 2) return '';
+    const name = POWER_UPS[rnd];
+    return createPowerUp(name);
   };
 
   const addPowerUpIfExists = (tile) => {
     if (tile.powerUp) {
       // delay add until the dom element is animated
-      if (!turnedPowerUps.includes(tile.powerUp)) {
-        setTimeout(() => {
-          turnedPowerUps.push(tile.powerUp);
-        }, tile.animationDelay);
-      }
+      setTimeout(() => {
+        turnedPowerUps.set(tile.powerUp.id, tile.powerUp);
+      }, tile.animationDelay);
     }
   };
 
   const removePowerUp = (powerUp) => {
-    const indexOf = turnedPowerUps.indexOf(powerUp);
-    if (indexOf > -1) {
-      turnedPowerUps.splice(indexOf, 1);
-    }
+    turnedPowerUps.delete(powerUp.id);
   };
 
   const resetPowerUps = () => {
-    while (turnedPowerUps.length) {
-      turnedPowerUps.pop();
-    }
+    turnedPowerUps.clear();
+    executedPowerUps.clear();
   };
 
   return {
     getPowerUp,
     addPowerUpIfExists,
     turnedPowerUps,
+    executedPowerUps,
     resetPowerUps,
     removePowerUp,
+    activePowerUp,
+    activePowerUpId,
   };
 };
 

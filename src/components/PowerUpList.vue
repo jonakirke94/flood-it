@@ -1,25 +1,21 @@
 <template>
-  <ul class="flex">
-    {{
-      startTileId
-    }}
-    <li v-for="(powerUp, index) in powerUps" :key="index">
-      <button
-        class="h-12 w-12 bg-black text-white flex justify-center items-center rounded-md"
-        @click="executePowerUp(powerUp)"
-      >
+  <ul class="flex flex-col mb-auto items-center w-16 md:w-32 mt-24 rounded-md relative">
+    <li v-for="(powerUp, index) in powerUps.values()" :key="index" class="mb-4">
+      <base-button class="bg-gray-700 text-white flex justify-center items-center" @click="executePowerUp(powerUp)">
         <icon-fire-outline v-if="powerUp.name === 'fire'" class="w-6 h-6"></icon-fire-outline>
         <icon-heart-outline v-else-if="powerUp.name === 'health'" class="w-6 h-6"></icon-heart-outline>
-        <icon-flag-outline v-else-if="powerUp.name === 'flag'" class="w-6 h-6"></icon-flag-outline>
-      </button>
+        <icon-flag-outline v-else-if="powerUp.name === 'flag'" class="w-6 h-6"></icon-flag-outline
+      ></base-button>
     </li>
 
-    <flood-button-list v-if="showButtons" @fill-pressed="setActiveColor"></flood-button-list>
+    <flood-button-fold-out :show="showColorButtons" @pressed="setActiveColor"></flood-button-fold-out>
   </ul>
 </template>
 
 <script>
-import FloodButtonList from '../components/FloodButtonList.vue';
+import FloodButtonFoldOut from '../components/FloodButtonFoldOut.vue';
+
+import BaseButton from '../components/BaseButton.vue';
 
 import IconFireOutline from '../components/icons/IconFireOutline.vue';
 import IconHeartOutline from '../components/icons/IconHeartOutline.vue';
@@ -34,55 +30,62 @@ export default {
     IconFireOutline,
     IconHeartOutline,
     IconFlagOutline,
-    FloodButtonList,
+    FloodButtonFoldOut,
+    BaseButton,
   },
   props: {
     powerUps: {
-      type: Array,
-      default: () => [],
+      type: Map,
+      default: () => new Map(),
     },
   },
   setup() {
     const { clicks, activeTileId, startTileId } = useGameState();
-    const { removePowerUp } = usePowerUps();
+    const { removePowerUp, executedPowerUps, activePowerUpId, activePowerUp } = usePowerUps();
 
     const callPlayRound = inject('callPlayRound');
 
-    let activePowerUp = '';
     let activeFireColor = ref('');
 
-    let showButtons = ref(false);
+    let showColorButtons = ref(false);
 
-    watch(activeTileId, (activeTileId) => {
-      if (activeTileId && activePowerUp) {
-        if (activePowerUp.name === 'fire') {
-          executeFirePower(activePowerUp);
+    watch(activeTileId, (newActiveTileId) => {
+      if (newActiveTileId && activePowerUpId.value) {
+        debugger;
+        if (activePowerUp.value.name === 'fire') {
+          executeFirePower(activePowerUp.value, newActiveTileId);
         }
 
         if (activePowerUp.name === 'flag') {
-          executeFlagPower(activePowerUp, activeTileId);
+          executeFlagPower(activePowerUp.value, newActiveTileId);
         }
       }
     });
 
     const executeHealthPower = (powerUp) => {
       clicks.value--;
-      removePowerUp(powerUp);
+      powerUpCleanUp(powerUp);
     };
 
-    const executeFlagPower = (powerUp) => {
-      startTileId.value = activeTileId.value;
-      activePowerUp = '';
-      activeTileId.value = '';
-      removePowerUp(powerUp);
+    const executeFlagPower = (powerUp, newStartTileId) => {
+      debugger;
+      startTileId.value = newStartTileId;
+      activePowerUpId.value = '';
+      powerUpCleanUp(powerUp);
     };
 
-    const executeFirePower = (powerUp) => {
-      callPlayRound(activeFireColor.value, activeTileId.value);
-      activePowerUp = '';
+    const executeFirePower = (powerUp, newStartTileId) => {
+      callPlayRound(activeFireColor.value, newStartTileId);
       activeFireColor.value = '';
       activeTileId.value = '';
+      showColorButtons.value = false;
+      powerUpCleanUp(powerUp);
+    };
+
+    const powerUpCleanUp = (powerUp) => {
+      executedPowerUps.add(powerUp.id);
       removePowerUp(powerUp);
+      activePowerUpId.value = '';
     };
 
     const executePowerUp = (powerUp) => {
@@ -94,17 +97,17 @@ export default {
 
       if (powerUp.type === 'ASYNC') {
         if (powerUp.name === 'flag') {
-          activePowerUp = powerUp;
+          activePowerUpId.value = powerUp.id;
         }
 
         if (powerUp.name === 'fire') {
-          activePowerUp = powerUp;
-          showButtons.value = true;
+          activePowerUpId.value = powerUp.id;
+          showColorButtons.value = true;
         }
       }
     };
 
-    return { executePowerUp, startTileId, showButtons, activeFireColor };
+    return { executePowerUp, showColorButtons, activeFireColor };
   },
   methods: {
     setActiveColor(color) {

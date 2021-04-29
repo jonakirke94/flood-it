@@ -1,19 +1,17 @@
 <template>
   <div
-    :id="tile.id"
-    class="flex flex-wrap relative flex-shrink-0 text-white justify-center items-center text-xs"
+    class="relative text-white flex h-full w-full justify-center items-center text-xs"
     :class="[backgroundClass, { [animationClass]: tile.animated }]"
     :style="animationDelayStyle"
     @animationend="removeAnimation(tile)"
     @click="tileClicked"
   >
-    {{ tile.animated }}
     <icon-rss-outline
       v-if="tile.id === startTileId"
       class="w-3 h-3 transform rotate-90 absolute left-1 top-1"
     ></icon-rss-outline>
 
-    <template v-if="!hasTurnedThePowerUp">
+    <template v-if="showPowerUpIcon">
       <icon-fire-outline v-if="tile?.powerUp?.name === 'fire'" class="w-4 h-4"></icon-fire-outline>
       <icon-heart-outline v-else-if="tile?.powerUp?.name === 'health'" class="w-4 h-4"></icon-heart-outline>
       <icon-flag-outline v-else-if="tile?.powerUp?.name === 'flag'" class="w-4 h-4"></icon-flag-outline>
@@ -45,14 +43,6 @@ export default {
       type: Object,
       required: true,
     },
-    height: {
-      type: Number,
-      default: 0,
-    },
-    width: {
-      type: Number,
-      default: 0,
-    },
     powerUp: {
       type: [Object, String],
       default: () => null,
@@ -62,7 +52,7 @@ export default {
     const { activeTileId, removeAnimation } = useGameState();
     const { colors, animations } = useOptions();
 
-    const { turnedPowerUps } = usePowerUps();
+    const { turnedPowerUps, executedPowerUps } = usePowerUps();
 
     const startTileId = inject('startTileId');
 
@@ -84,7 +74,6 @@ export default {
     const backgroundClass = computed(() => {
       if (props.tile.animated) {
         return colors.get(oldColor.value);
-        // return 'bg-gray-700';
       }
 
       return colors.get(newColor.value);
@@ -92,13 +81,13 @@ export default {
 
     const animationClass = computed(() => animations.get(props.tile.colorKey));
 
-    const hasTurnedThePowerUp = computed(() => turnedPowerUps.map((x) => x.id).includes(props.tile.powerUp?.id));
+    const showPowerUpIcon = computed(() => {
+      return !turnedPowerUps.has(props.tile.powerUp?.id) && !executedPowerUps.has(props.tile.powerUp?.id);
+    });
 
     const animationDelayStyle = computed(() => {
       return {
         'animation-delay': `${props.tile.animationDelay}ms`,
-        width: `${props.width}px`,
-        height: `${props.height}px`,
       };
     });
 
@@ -108,9 +97,8 @@ export default {
       backgroundClass,
       animationClass,
       removeAnimation,
-      turnedPowerUps,
+      showPowerUpIcon,
       animationDelayStyle,
-      hasTurnedThePowerUp,
     };
   },
 };

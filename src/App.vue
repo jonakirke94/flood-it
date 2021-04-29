@@ -1,16 +1,21 @@
 <template>
-  <div>
-    <div class="flex flex-col">
-      <span>Floods {{ clicks }}/25</span>
-      <span>Has won? {{ hasWon }}</span>
+  <div class="max-w-screen-md h-screen mx-auto">
+    <div class="flex">
+      <div class="flex flex-1 flex-col">
+        <div class="flex justify-between items-center h-24">
+          <h1 class="text-3xl font-extrabold text-gray-100 md:ml-0 ml-4">Floods {{ clicks }}/25</h1>
+          <!--<span>Has won? {{ hasWon }}</span>-->
+          <base-button class="bg-gray-900 text-gray-100 flex justify-center items-center" @click="newGame">
+            <icon-refresh-outline class="w-5 h-5"></icon-refresh-outline>
+          </base-button>
+        </div>
+
+        <tile-board :tiles="board"></tile-board>
+
+        <flood-button-list :disabled="disabled" @fill-pressed="playRound($event)"></flood-button-list>
+      </div>
+      <power-up-list :power-ups="turnedPowerUps"></power-up-list>
     </div>
-    <tile-board :tiles="board"></tile-board>
-
-    <power-up-list :power-ups="turnedPowerUps"></power-up-list>
-
-    <flood-button-list @fill-pressed="callPlayRound($event)"></flood-button-list>
-
-    <button class="h-12 w-12 shadow border border-gray-900" @click="newGame">RESET</button>
   </div>
 </template>
 
@@ -22,14 +27,18 @@ import usePowerUps from './composables/use-power-ups';
 import FloodButtonList from './components/FloodButtonList.vue';
 import PowerUpList from './components/PowerUpList.vue';
 import TileBoard from './components/TileBoard.vue';
+import BaseButton from './components/BaseButton.vue';
+import IconRefreshOutline from './components/icons/IconRefreshOutline.vue';
 
-import { provide } from 'vue';
+import { provide, computed } from 'vue';
 
 export default {
   components: {
     FloodButtonList,
     PowerUpList,
     TileBoard,
+    BaseButton,
+    IconRefreshOutline,
   },
   setup() {
     const { instantiateGame, playRound, clicks, hasWon, board, reset, startTileId } = useGameState();
@@ -44,24 +53,26 @@ export default {
 
     newGame();
 
-    const callPlayRound = (color, tileIdToFlood = null) => {
-      playRound(color, tileIdToFlood);
-    };
+    // define a proper api and inject a symbol instead
 
     provide('startTileId', startTileId);
-    provide('activePowerUpId', activePowerUpId);
 
     // we dont need to inject this because we dont use a callback anymore
-    provide('callPlayRound', callPlayRound);
+    provide('callPlayRound', playRound);
+
+    const disabled = computed(() => {
+      return !!(hasWon.value || activePowerUpId.value);
+    });
 
     return {
       board,
       newGame,
-      callPlayRound,
+      playRound,
       clicks,
       hasWon,
       colors,
       turnedPowerUps,
+      disabled,
     };
   },
 };

@@ -1,0 +1,64 @@
+<template>
+  <transition-group name="slide-left" tag="ul" class="flex flex-col absolute space-y-4 bg-gray-800">
+    <base-button
+      v-for="color in colors.keys()"
+      v-show="show"
+      :key="color"
+      :class="colors.get(color)"
+      @click="$emit('pressed', color)"
+    ></base-button>
+  </transition-group>
+</template>
+
+<script>
+import BaseButton from './BaseButton.vue';
+
+import useOptions from '../composables/use-options';
+
+export default {
+  components: {
+    BaseButton,
+  },
+  props: {
+    show: {
+      type: Boolean,
+    },
+  },
+  emits: ['pressed'],
+  setup() {
+    const { colors } = useOptions();
+
+    return {
+      colors,
+    };
+  },
+};
+</script>
+
+<style scoped>
+.slide-left-enter-active {
+  transition: all 0.5s;
+  animation: stagger 0.5s;
+}
+.slide-left-leave-active {
+  transition: all 0.5s;
+  animation: stagger 0.5s reverse;
+}
+
+.slide-left-enter,
+.slide-left-leave-to {
+  opacity: 0;
+}
+
+@keyframes stagger {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>

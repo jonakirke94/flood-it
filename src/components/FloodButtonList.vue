@@ -1,25 +1,38 @@
 <template>
-  <button class="h-12 w-12 mt-12 bg-blue-300" @click="$emit('fill-pressed', 'BLUE-300')">r</button>
-  <button class="h-12 w-12 bg-blue-500" @click="$emit('fill-pressed', 'BLUE-500')">g</button>
-  <button class="h-12 w-12 bg-blue-700" @click="$emit('fill-pressed', 'BLUE-700')">y</button>
-  <button class="h-12 w-12 bg-indigo-300" @click="$emit('fill-pressed', 'INDIGO-300')">i</button>
-  <button class="h-12 w-12 bg-indigo-500" @click="$emit('fill-pressed', 'INDIGO-500')">t</button>
-  <button class="h-12 w-12 bg-indigo-700" @click="$emit('fill-pressed', 'INDIGO-700')">p</button>
+  <div class="space-x-4 mt-6 md:mt-12" :class="{ 'filter blur-sm pointer-events-none': disabled }">
+    <base-button class="bg-green-500" @click="$emit('fill-pressed', 'GREEN')">q</base-button>
+    <base-button class="bg-red-500" @click="$emit('fill-pressed', 'RED')">w</base-button>
+    <base-button class="bg-yellow-500" @click="$emit('fill-pressed', 'YELLOW')">e</base-button>
+    <base-button class="bg-teal-500" @click="$emit('fill-pressed', 'TEAL')">r</base-button>
+    <base-button class="bg-indigo-500" @click="$emit('fill-pressed', 'INDIGO')">t</base-button>
+    <base-button class="bg-pink-500" @click="$emit('fill-pressed', 'PINK')">y</base-button>
+  </div>
 </template>
 
 <script>
 import useKeydown from '../composables/use-keydown';
 
+import BaseButton from './BaseButton.vue';
+
 export default {
+  components: {
+    BaseButton,
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      required: true,
+    },
+  },
   emits: ['fill-pressed'],
   setup(_props, { emit }) {
     useKeydown([
-      { key: 'r', fn: () => emit('fill-pressed', 'BLUE-300') },
-      { key: 'g', fn: () => emit('fill-pressed', 'BLUE-500') },
-      { key: 'y', fn: () => emit('fill-pressed', 'BLUE-700') },
-      { key: 'i', fn: () => emit('fill-pressed', 'INDIGO-300') },
-      { key: 't', fn: () => emit('fill-pressed', 'INDIGO-500') },
-      { key: 'p', fn: () => emit('fill-pressed', 'INDIGO-700') },
+      { key: 'q', fn: () => emit('fill-pressed', 'GREEN') },
+      { key: 'w', fn: () => emit('fill-pressed', 'RED') },
+      { key: 'e', fn: () => emit('fill-pressed', 'YELLOW') },
+      { key: 'r', fn: () => emit('fill-pressed', 'TEAL') },
+      { key: 't', fn: () => emit('fill-pressed', 'INDIGO') },
+      { key: 'y', fn: () => emit('fill-pressed', 'PINK') },
     ]);
   },
 };

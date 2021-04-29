@@ -45,7 +45,7 @@ export const useGameState = function () {
     });
   };
 
-  const playRound = function (newColor, cb, tileToFlood) {
+  const playRound = function (newColor, tileToFlood) {
     if (hasWon.value) {
       console.warn('The game is already won');
       return;
@@ -58,7 +58,7 @@ export const useGameState = function () {
 
     const [x, y] = (tileToFlood || startTileId.value).split('-');
     const startTile = board[x][y];
-    floodFill(startTile, newColor, cb);
+    floodFill(startTile, newColor);
 
     clicks.value++;
 
@@ -70,6 +70,8 @@ export const useGameState = function () {
       board.pop();
     }
 
+    startTileId.value = '0-0';
+    activeTileId.value = '';
     clicks.value = 0;
     hasWon.value = false;
   };

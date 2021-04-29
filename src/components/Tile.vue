@@ -7,6 +7,7 @@
     @animationend="removeAnimation(tile)"
     @click="tileClicked"
   >
+    {{ tile.animated }}
     <icon-rss-outline
       v-if="tile.id === startTileId"
       class="w-3 h-3 transform rotate-90 absolute left-1 top-1"
@@ -82,8 +83,8 @@ export default {
 
     const backgroundClass = computed(() => {
       if (props.tile.animated) {
-        // return colors.get(oldColor.value);
-        return 'bg-gray-700';
+        return colors.get(oldColor.value);
+        // return 'bg-gray-700';
       }
 
       return colors.get(newColor.value);

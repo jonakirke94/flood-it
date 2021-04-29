@@ -62,8 +62,6 @@ let useFloodIt = (board) => {
     };
 
     fillFromTile();
-
-    console.log('done traversing');
   };
 
   return {

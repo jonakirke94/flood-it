@@ -1,4 +1,3 @@
-import { nextTick } from 'vue';
 import useOptions from './use-options';
 
 let useAnimations = () => {

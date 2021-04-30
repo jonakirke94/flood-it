@@ -6,15 +6,16 @@
     @animationend="removeAnimation(tile)"
     @click="tileClicked"
   >
-    <icon-rss-outline
+    <icon-cloud-rain-outline
       v-if="tile.id === startTileId"
-      class="w-3 h-3 transform rotate-90 absolute left-1 top-1"
-    ></icon-rss-outline>
+      class="w-3 h-3 absolute left-1 top-1"
+    ></icon-cloud-rain-outline>
 
     <template v-if="showPowerUpIcon">
       <icon-fire-outline v-if="tile?.powerUp?.name === 'fire'" class="w-4 h-4"></icon-fire-outline>
       <icon-heart-outline v-else-if="tile?.powerUp?.name === 'health'" class="w-4 h-4"></icon-heart-outline>
-      <icon-flag-outline v-else-if="tile?.powerUp?.name === 'flag'" class="w-4 h-4"></icon-flag-outline>
+
+      <icon-cloud-rain-outline v-else-if="tile?.powerUp?.name === 'flag'" class="w-4 h-4"></icon-cloud-rain-outline>
     </template>
   </div>
 </template>
@@ -22,8 +23,7 @@
 <script>
 import IconFireOutline from '../components/icons/IconFireOutline.vue';
 import IconHeartOutline from '../components/icons/IconHeartOutline.vue';
-import IconFlagOutline from './icons/IconFlagOutline.vue';
-import IconRssOutline from './icons/IconRssOutline.vue';
+import IconCloudRainOutline from './icons/IconCloudRainOutline.vue';
 
 import { inject, computed, watch, ref } from 'vue';
 
@@ -35,8 +35,7 @@ export default {
   components: {
     IconFireOutline,
     IconHeartOutline,
-    IconFlagOutline,
-    IconRssOutline,
+    IconCloudRainOutline,
   },
   props: {
     tile: {

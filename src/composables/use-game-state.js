@@ -1,7 +1,8 @@
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import useFloodIt from './use-flood-it';
 import useOptions from './use-options';
 import usePowerUps from './use-power-ups';
+import throttle from 'lodash.throttle';
 
 let board = reactive([]);
 let startTileId = ref('0-0');
@@ -12,7 +13,7 @@ const hasWon = ref(false);
 export const useGameState = function () {
   const { floodFill, floodedTiles } = useFloodIt(board);
   const { GRID_SIZE, MAX_FLOODS, randomColorKey } = useOptions();
-  const { getPowerUp } = usePowerUps();
+  const { getPowerUp, activePowerUp, activeFireColor } = usePowerUps();
 
   const checkIfWon = function () {
     hasWon.value = floodedTiles.size === GRID_SIZE * GRID_SIZE;
@@ -29,7 +30,7 @@ export const useGameState = function () {
         }
 
         // make sure we dont have powerups on start colors
-        const powerUp = colorKey === startColor ? '' : getPowerUp(GRID_SIZE * GRID_SIZE);
+        const powerUp = colorKey === startColor ? '' : getPowerUp();
         row.push({
           animated: false,
           animationDelay: 0,
@@ -45,7 +46,22 @@ export const useGameState = function () {
     });
   };
 
-  const playRound = function (newColor, tileToFlood) {
+  const powerUpHelpText = computed(() => {
+    if (!activePowerUp.value) return '';
+
+    if (activePowerUp.value.name === 'fire') {
+      return activeFireColor.value ? 'Select a cell to flood' : 'Select a color';
+    }
+
+    if (activePowerUp.value.name === 'flag') {
+      return 'Select a new spring';
+    }
+
+    return '';
+  });
+
+  // (calculateLayout, 150)
+  const playRound = throttle((newColor, tileToFlood) => {
     if (hasWon.value) {
       console.warn('The game is already won');
       return;
@@ -63,7 +79,7 @@ export const useGameState = function () {
     clicks.value++;
 
     checkIfWon();
-  };
+  }, 300);
 
   const reset = () => {
     while (board.length) {
@@ -90,6 +106,7 @@ export const useGameState = function () {
     startTileId,
     activeTileId,
     removeAnimation,
+    powerUpHelpText,
   };
 };
 

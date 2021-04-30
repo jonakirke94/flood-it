@@ -1,14 +1,24 @@
 <template>
   <ul class="flex flex-col mb-auto items-center w-16 md:w-32 mt-24 rounded-md relative">
-    <li v-for="(powerUp, index) in powerUps.values()" :key="index" class="mb-4">
-      <base-button class="bg-gray-700 text-white flex justify-center items-center" @click="executePowerUp(powerUp)">
-        <icon-fire-outline v-if="powerUp.name === 'fire'" class="w-6 h-6"></icon-fire-outline>
-        <icon-heart-outline v-else-if="powerUp.name === 'health'" class="w-6 h-6"></icon-heart-outline>
-        <icon-flag-outline v-else-if="powerUp.name === 'flag'" class="w-6 h-6"></icon-flag-outline
-      ></base-button>
-    </li>
+    <template v-if="!hasWon">
+      <li v-for="(powerUp, index) in powerUps.values()" :key="index" class="mb-4">
+        <base-button
+          class="bg-gray-700 text-white flex justify-center items-center"
+          :class="{ 'border-2 border-white': activePowerUpId === powerUp.id }"
+          @click="executePowerUp(powerUp)"
+        >
+          <icon-fire-outline v-if="powerUp.name === 'fire'" class="w-6 h-6"></icon-fire-outline>
+          <icon-heart-outline v-else-if="powerUp.name === 'health'" class="w-6 h-6"></icon-heart-outline>
+          <icon-cloud-rain-outline v-else-if="powerUp.name === 'flag'" class="w-6 h-6"></icon-cloud-rain-outline>
+        </base-button>
+      </li>
 
-    <flood-button-fold-out :show="showColorButtons" @pressed="setActiveColor"></flood-button-fold-out>
+      <flood-button-fold-out
+        :show="showColorButtons"
+        :active-color="activeFireColor"
+        @pressed="setActiveColor"
+      ></flood-button-fold-out>
+    </template>
   </ul>
 </template>
 
@@ -19,7 +29,7 @@ import BaseButton from '../components/BaseButton.vue';
 
 import IconFireOutline from '../components/icons/IconFireOutline.vue';
 import IconHeartOutline from '../components/icons/IconHeartOutline.vue';
-import IconFlagOutline from './icons/IconFlagOutline.vue';
+import IconCloudRainOutline from './icons/IconCloudRainOutline.vue';
 
 import useGameState from '../composables/use-game-state';
 import usePowerUps from '../composables/use-power-ups';
@@ -29,7 +39,7 @@ export default {
   components: {
     IconFireOutline,
     IconHeartOutline,
-    IconFlagOutline,
+    IconCloudRainOutline,
     FloodButtonFoldOut,
     BaseButton,
   },
@@ -40,23 +50,18 @@ export default {
     },
   },
   setup() {
-    const { clicks, activeTileId, startTileId } = useGameState();
-    const { removePowerUp, executedPowerUps, activePowerUpId, activePowerUp } = usePowerUps();
+    const { clicks, activeTileId, startTileId, hasWon } = useGameState();
+    const { removePowerUp, executedPowerUps, activePowerUpId, activePowerUp, activeFireColor } = usePowerUps();
 
     const callPlayRound = inject('callPlayRound');
-
-    let activeFireColor = ref('');
 
     let showColorButtons = ref(false);
 
     watch(activeTileId, (newActiveTileId) => {
       if (newActiveTileId && activePowerUpId.value) {
-        debugger;
         if (activePowerUp.value.name === 'fire') {
           executeFirePower(activePowerUp.value, newActiveTileId);
-        }
-
-        if (activePowerUp.name === 'flag') {
+        } else if (activePowerUp.value.name === 'flag') {
           executeFlagPower(activePowerUp.value, newActiveTileId);
         }
       }
@@ -68,14 +73,13 @@ export default {
     };
 
     const executeFlagPower = (powerUp, newStartTileId) => {
-      debugger;
       startTileId.value = newStartTileId;
       activePowerUpId.value = '';
       powerUpCleanUp(powerUp);
     };
 
-    const executeFirePower = (powerUp, newStartTileId) => {
-      callPlayRound(activeFireColor.value, newStartTileId);
+    const executeFirePower = (powerUp, executeOnTileId) => {
+      callPlayRound(activeFireColor.value, executeOnTileId);
       activeFireColor.value = '';
       activeTileId.value = '';
       showColorButtons.value = false;
@@ -107,7 +111,7 @@ export default {
       }
     };
 
-    return { executePowerUp, showColorButtons, activeFireColor };
+    return { executePowerUp, showColorButtons, activeFireColor, activePowerUpId, hasWon };
   },
   methods: {
     setActiveColor(color) {

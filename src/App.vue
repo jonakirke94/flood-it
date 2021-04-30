@@ -4,7 +4,6 @@
       <div class="flex flex-1 flex-col">
         <div class="flex justify-between items-center h-24">
           <h1 class="text-3xl font-extrabold text-gray-100 md:ml-0 ml-4">Floods {{ clicks }}/25</h1>
-          <!--<span>Has won? {{ hasWon }}</span>-->
           <base-button class="bg-gray-900 text-gray-100 flex justify-center items-center" @click="newGame">
             <icon-refresh-outline class="w-5 h-5"></icon-refresh-outline>
           </base-button>
@@ -12,7 +11,11 @@
 
         <tile-board :tiles="board"></tile-board>
 
-        <flood-button-list :disabled="disabled" @fill-pressed="playRound($event)"></flood-button-list>
+        <flood-button-list
+          :disabled="disabled"
+          :msg="powerUpHelpText"
+          @fill-pressed="playRound($event)"
+        ></flood-button-list>
       </div>
       <power-up-list :power-ups="turnedPowerUps"></power-up-list>
     </div>
@@ -41,7 +44,7 @@ export default {
     IconRefreshOutline,
   },
   setup() {
-    const { instantiateGame, playRound, clicks, hasWon, board, reset, startTileId } = useGameState();
+    const { instantiateGame, playRound, clicks, hasWon, board, reset, startTileId, powerUpHelpText } = useGameState();
     const { colors } = useOptions();
     const { turnedPowerUps, resetPowerUps, activePowerUpId } = usePowerUps();
 
@@ -73,6 +76,7 @@ export default {
       colors,
       turnedPowerUps,
       disabled,
+      powerUpHelpText,
     };
   },
 };

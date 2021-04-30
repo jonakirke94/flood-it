@@ -11,6 +11,8 @@ import useOptions from '../composables/use-options';
 
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 
+import debounce from 'lodash.debounce';
+
 export default {
   components: {
     Tile,
@@ -45,10 +47,10 @@ export default {
       };
     });
 
-    window.addEventListener('resize', getBoardWidth);
+    window.addEventListener('resize', debounce(getBoardWidth, 100));
 
     onUnmounted(() => {
-      window.removeEventListener('resize', getBoardWidth);
+      window.removeEventListener('resize', debounce(getBoardWidth, 100));
     });
 
     return {
@@ -58,13 +60,3 @@ export default {
   },
 };
 </script>
-
-<style>
-/*.grid-container {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
-  width: 500px;
-  height: auto;
-}*/
-</style>

@@ -5,6 +5,7 @@ import useOptions from '../composables/use-options';
 let turnedPowerUps = reactive(new Map());
 let executedPowerUps = reactive(new Set());
 let activePowerUpId = ref('');
+let activeFireColor = ref('');
 
 const POWER_UPS = ['fire', 'flag', 'health'];
 
@@ -25,9 +26,9 @@ export const usePowerUps = function () {
   };
 
   // TODO need to calculate probabilities here
-  const getPowerUp = (gridSize) => {
+  const getPowerUp = () => {
     const rnd = Math.floor(Math.random() * (GRID_SIZE + 1));
-    if (rnd > 2) return '';
+    if (rnd > POWER_UPS.length - 1) return '';
     const name = POWER_UPS[rnd];
     return createPowerUp(name);
   };
@@ -59,6 +60,7 @@ export const usePowerUps = function () {
     removePowerUp,
     activePowerUp,
     activePowerUpId,
+    activeFireColor,
   };
 };
 

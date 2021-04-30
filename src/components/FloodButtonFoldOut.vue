@@ -4,7 +4,7 @@
       v-for="color in colors.keys()"
       v-show="show"
       :key="color"
-      :class="colors.get(color)"
+      :class="[colors.get(color), { 'border-2 border-white': activeColor === color }]"
       @click="$emit('pressed', color)"
     ></base-button>
   </transition-group>
@@ -22,6 +22,10 @@ export default {
   props: {
     show: {
       type: Boolean,
+    },
+    activeColor: {
+      type: String,
+      required: true,
     },
   },
   emits: ['pressed'],

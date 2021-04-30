@@ -1,5 +1,5 @@
 export const useOptions = function () {
-  const GRID_SIZE = 3;
+  const GRID_SIZE = 15;
   const MAX_FLOODS = 25;
 
   const colors = new Map();

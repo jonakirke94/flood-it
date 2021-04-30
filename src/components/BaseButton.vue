@@ -1,5 +1,7 @@
 <template>
-  <button class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 btn-shadow rounded-md">
+  <button
+    class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 outline-none focus:outline-none lg:h-16 lg:w-16 btn-shadow rounded-md"
+  >
     <slot />
   </button>
 </template>

@@ -1,12 +1,12 @@
 import useNeighbours from './use-neighbours';
-import useAnimations from './use-animations';
+
+import { getNextDelay } from '../util/ui-helpers';
+
 import usePowerUps from './use-power-ups';
-import { nextTick } from 'vue';
 
 const floodedTiles = new Map();
 
 let useFloodIt = (board) => {
-  const { getNextDelay } = useAnimations();
   const { handleNeighbours } = useNeighbours(board);
 
   const { addPowerUpIfExists } = usePowerUps();
@@ -31,10 +31,12 @@ let useFloodIt = (board) => {
           if (tile.colorKey !== prevColor || floodedTiles.has(tile.id)) continue;
 
           if (tile.colorKey === prevColor) {
+            tile.oldColorKey = tile.colorKey;
             tile.colorKey = newColor;
             tile.animationDelay = tile.id === firstTile.id ? 0 : getNextDelay(tile);
             tile.animated = true;
             floodedTiles.set(tile.id, tile);
+            addPowerUpIfExists(tile);
           }
 
           handleNeighbours(tile, tileStack);
@@ -47,6 +49,7 @@ let useFloodIt = (board) => {
 
           if (tile.colorKey === newColor) {
             tile.animationDelay = getNextDelay(tile);
+            tile.oldColorKey = newColor;
             tile.animated = true;
             floodedTiles.set(tile.id, tile);
 

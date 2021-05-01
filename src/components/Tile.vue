@@ -25,10 +25,11 @@ import IconFireOutline from '../components/icons/IconFireOutline.vue';
 import IconHeartOutline from '../components/icons/IconHeartOutline.vue';
 import IconCloudRainOutline from './icons/IconCloudRainOutline.vue';
 
-import { inject, computed, watch, ref } from 'vue';
+import { COLORS, ANIMATIONS } from '../util/options';
+
+import { computed } from 'vue';
 
 import useGameState from '../composables/use-game-state';
-import useOptions from '../composables/use-options';
 import usePowerUps from '../composables/use-power-ups';
 
 export default {
@@ -48,37 +49,22 @@ export default {
     },
   },
   setup(props) {
-    const { activeTileId, removeAnimation } = useGameState();
-    const { colors, animations } = useOptions();
-
-    const { turnedPowerUps, executedPowerUps } = usePowerUps();
-
-    const startTileId = inject('startTileId');
+    const { activeTileId, removeAnimation, startTileId } = useGameState();
+    const { executedPowerUps, turnedPowerUps } = usePowerUps();
 
     const tileClicked = () => {
       activeTileId.value = props.tile.id;
     };
 
-    const oldColor = ref(props.tile.colorKey);
-    const newColor = ref(props.tile.colorKey);
-
-    watch(
-      () => props.tile.colorKey,
-      (newTile, oldTile) => {
-        newColor.value = newTile;
-        oldColor.value = oldTile;
-      }
-    );
-
     const backgroundClass = computed(() => {
       if (props.tile.animated) {
-        return colors.get(oldColor.value);
+        return COLORS.get(props.tile.oldColorKey);
       }
 
-      return colors.get(newColor.value);
+      return COLORS.get(props.tile.colorKey);
     });
 
-    const animationClass = computed(() => animations.get(props.tile.colorKey));
+    const animationClass = computed(() => ANIMATIONS.get(props.tile.colorKey));
 
     const showPowerUpIcon = computed(() => {
       return !turnedPowerUps.has(props.tile.powerUp?.id) && !executedPowerUps.has(props.tile.powerUp?.id);

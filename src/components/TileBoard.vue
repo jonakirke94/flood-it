@@ -7,9 +7,9 @@
 <script>
 import Tile from '../components/Tile.vue';
 
-import useOptions from '../composables/use-options';
-
 import { ref, onMounted, onUnmounted, computed } from 'vue';
+
+import { GRID_SIZE } from '../util/options';
 
 import debounce from 'lodash.debounce';
 
@@ -24,8 +24,6 @@ export default {
     },
   },
   setup() {
-    const { GRID_SIZE } = useOptions();
-
     let boardHeight = ref(0);
     let root = ref();
 
@@ -47,10 +45,11 @@ export default {
       };
     });
 
-    window.addEventListener('resize', debounce(getBoardWidth, 100));
+    const fnc = debounce(getBoardWidth, 100);
+    window.addEventListener('resize', fnc);
 
     onUnmounted(() => {
-      window.removeEventListener('resize', debounce(getBoardWidth, 100));
+      window.removeEventListener('resize', fnc);
     });
 
     return {

@@ -1,10 +1,10 @@
 <template>
   <transition-group name="slide-left" tag="ul" class="flex flex-col absolute space-y-4 bg-gray-800">
     <base-button
-      v-for="color in colors.keys()"
+      v-for="color in COLORS.keys()"
       v-show="show"
       :key="color"
-      :class="[colors.get(color), { 'border-2 border-white': activeColor === color }]"
+      :class="[COLORS.get(color), { 'border-2 border-white': activeColor === color }]"
       @click="$emit('pressed', color)"
     ></base-button>
   </transition-group>
@@ -13,7 +13,7 @@
 <script>
 import BaseButton from './BaseButton.vue';
 
-import useOptions from '../composables/use-options';
+import { COLORS } from '../util/options';
 
 export default {
   components: {
@@ -30,10 +30,8 @@ export default {
   },
   emits: ['pressed'],
   setup() {
-    const { colors } = useOptions();
-
     return {
-      colors,
+      COLORS,
     };
   },
 };

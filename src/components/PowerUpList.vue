@@ -33,7 +33,7 @@ import IconCloudRainOutline from './icons/IconCloudRainOutline.vue';
 
 import useGameState from '../composables/use-game-state';
 import usePowerUps from '../composables/use-power-ups';
-import { watch, ref, inject } from 'vue';
+import { watch, ref } from 'vue';
 
 export default {
   components: {
@@ -50,10 +50,8 @@ export default {
     },
   },
   setup() {
-    const { clicks, activeTileId, startTileId, hasWon } = useGameState();
-    const { removePowerUp, executedPowerUps, activePowerUpId, activePowerUp, activeFireColor } = usePowerUps();
-
-    const callPlayRound = inject('callPlayRound');
+    const { floods, activeTileId, startTileId, hasWon, playRound } = useGameState();
+    const { executedPowerUps, activePowerUpId, activePowerUp, activeFireColor } = usePowerUps();
 
     let showColorButtons = ref(false);
 
@@ -68,7 +66,7 @@ export default {
     });
 
     const executeHealthPower = (powerUp) => {
-      clicks.value--;
+      floods.value--;
       powerUpCleanUp(powerUp);
     };
 
@@ -79,7 +77,7 @@ export default {
     };
 
     const executeFirePower = (powerUp, executeOnTileId) => {
-      callPlayRound(activeFireColor.value, executeOnTileId);
+      playRound(activeFireColor.value, executeOnTileId);
       activeFireColor.value = '';
       activeTileId.value = '';
       showColorButtons.value = false;
@@ -88,7 +86,6 @@ export default {
 
     const powerUpCleanUp = (powerUp) => {
       executedPowerUps.add(powerUp.id);
-      removePowerUp(powerUp);
       activePowerUpId.value = '';
     };
 

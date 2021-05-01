@@ -2,81 +2,61 @@
   <div class="max-w-screen-md h-screen mx-auto">
     <div class="flex">
       <div class="flex flex-1 flex-col">
-        <div class="flex justify-between items-center h-24">
-          <h1 class="text-3xl font-extrabold text-gray-100 md:ml-0 ml-4">Floods {{ clicks }}/25</h1>
-          <base-button class="bg-gray-900 text-gray-100 flex justify-center items-center" @click="newGame">
-            <icon-refresh-outline class="w-5 h-5"></icon-refresh-outline>
-          </base-button>
-        </div>
+        <game-header :count="floods" :max="MAX_FLOODS" @reset="newGame"></game-header>
 
         <tile-board :tiles="board"></tile-board>
 
         <flood-button-list
-          :disabled="disabled"
+          :disabled="isDisabled"
           :msg="powerUpHelpText"
           @fill-pressed="playRound($event)"
         ></flood-button-list>
       </div>
-      <power-up-list :power-ups="turnedPowerUps"></power-up-list>
+      <power-up-list :power-ups="displayPowerUpList"></power-up-list>
     </div>
   </div>
 </template>
 
 <script>
 import useGameState from './composables/use-game-state';
-import useOptions from './composables/use-options';
 import usePowerUps from './composables/use-power-ups';
 
 import FloodButtonList from './components/FloodButtonList.vue';
 import PowerUpList from './components/PowerUpList.vue';
 import TileBoard from './components/TileBoard.vue';
-import BaseButton from './components/BaseButton.vue';
-import IconRefreshOutline from './components/icons/IconRefreshOutline.vue';
+import GameHeader from './components/GameHeader.vue';
 
-import { provide, computed } from 'vue';
+import { MAX_FLOODS } from './util/options';
+
+import { computed } from 'vue';
 
 export default {
   components: {
     FloodButtonList,
     PowerUpList,
     TileBoard,
-    BaseButton,
-    IconRefreshOutline,
+    GameHeader,
   },
   setup() {
-    const { instantiateGame, playRound, clicks, hasWon, board, reset, startTileId, powerUpHelpText } = useGameState();
-    const { colors } = useOptions();
-    const { turnedPowerUps, resetPowerUps, activePowerUpId } = usePowerUps();
-
-    const newGame = () => {
-      reset();
-      resetPowerUps();
-      instantiateGame();
-    };
+    const { newGame, playRound, floods, hasWon, board, powerUpHelpText, hasUsedMaxFloods } = useGameState();
+    const { displayPowerUpList, resetPowerUps, activePowerUpId } = usePowerUps();
 
     newGame();
 
-    // define a proper api and inject a symbol instead
-
-    provide('startTileId', startTileId);
-
-    // we dont need to inject this because we dont use a callback anymore
-    provide('callPlayRound', playRound);
-
-    const disabled = computed(() => {
-      return !!(hasWon.value || activePowerUpId.value);
+    const isDisabled = computed(() => {
+      return !!(hasWon.value || activePowerUpId.value || hasUsedMaxFloods.value);
     });
 
     return {
       board,
       newGame,
       playRound,
-      clicks,
+      floods,
       hasWon,
-      colors,
-      turnedPowerUps,
-      disabled,
+      displayPowerUpList,
+      isDisabled,
       powerUpHelpText,
+      MAX_FLOODS,
     };
   },
 };

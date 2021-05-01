@@ -1,6 +1,7 @@
 import { reactive, computed, ref } from 'vue';
 import useId from './use-id';
-import useOptions from '../composables/use-options';
+
+import { GRID_SIZE } from '../util/options';
 
 let turnedPowerUps = reactive(new Map());
 let executedPowerUps = reactive(new Set());
@@ -11,7 +12,6 @@ const POWER_UPS = ['fire', 'flag', 'health'];
 
 export const usePowerUps = function () {
   const { generateId } = useId();
-  const { GRID_SIZE } = useOptions();
 
   const activePowerUp = computed(() => {
     return turnedPowerUps.get(activePowerUpId.value);
@@ -27,23 +27,23 @@ export const usePowerUps = function () {
 
   // TODO need to calculate probabilities here
   const getPowerUp = () => {
-    const rnd = Math.floor(Math.random() * (GRID_SIZE + 1));
+    const rnd = Math.floor(Math.random() * ((GRID_SIZE * GRID_SIZE) / 1.5 + 1));
     if (rnd > POWER_UPS.length - 1) return '';
     const name = POWER_UPS[rnd];
     return createPowerUp(name);
   };
 
+  const displayPowerUpList = computed(() => {
+    return new Map([...turnedPowerUps].filter(([k, v]) => !executedPowerUps.has(k)));
+  });
+
   const addPowerUpIfExists = (tile) => {
-    if (tile.powerUp) {
+    if (tile.powerUp && !turnedPowerUps.has(tile.powerUp.id)) {
       // delay add until the dom element is animated
       setTimeout(() => {
         turnedPowerUps.set(tile.powerUp.id, tile.powerUp);
       }, tile.animationDelay);
     }
-  };
-
-  const removePowerUp = (powerUp) => {
-    turnedPowerUps.delete(powerUp.id);
   };
 
   const resetPowerUps = () => {
@@ -57,10 +57,10 @@ export const usePowerUps = function () {
     turnedPowerUps,
     executedPowerUps,
     resetPowerUps,
-    removePowerUp,
     activePowerUp,
     activePowerUpId,
     activeFireColor,
+    displayPowerUpList,
   };
 };
 

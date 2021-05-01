@@ -1,6 +1,4 @@
-import useOptions from './use-options';
-
-const { GRID_SIZE } = useOptions();
+import { GRID_SIZE } from '../util/options';
 
 const NEIGHBOUR = {
   LEFT: 'left',

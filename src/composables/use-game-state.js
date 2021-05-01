@@ -1,22 +1,30 @@
 import { ref, reactive, computed } from 'vue';
-import useFloodIt from './use-flood-it';
-import useOptions from './use-options';
+
+import { GRID_SIZE, MAX_FLOODS } from '../util/options';
+import { randomColorKey } from '../util/ui-helpers';
+
 import usePowerUps from './use-power-ups';
 import throttle from 'lodash.throttle';
+import useFloodIt from './use-flood-it';
 
 let board = reactive([]);
 let startTileId = ref('0-0');
-const clicks = ref(0);
+const floods = ref(0);
 const activeTileId = ref('');
 const hasWon = ref(false);
 
 export const useGameState = function () {
   const { floodFill, floodedTiles } = useFloodIt(board);
-  const { GRID_SIZE, MAX_FLOODS, randomColorKey } = useOptions();
-  const { getPowerUp, activePowerUp, activeFireColor } = usePowerUps();
+  const { getPowerUp, activePowerUp, activeFireColor, resetPowerUps } = usePowerUps();
 
   const checkIfWon = function () {
     hasWon.value = floodedTiles.size === GRID_SIZE * GRID_SIZE;
+  };
+
+  const newGame = () => {
+    reset();
+    resetPowerUps();
+    instantiateGame();
   };
 
   const instantiateGame = () => {
@@ -35,6 +43,7 @@ export const useGameState = function () {
           animated: false,
           animationDelay: 0,
           colorKey,
+          oldColorKey: colorKey,
           x,
           y,
           powerUp: powerUp,
@@ -60,23 +69,32 @@ export const useGameState = function () {
     return '';
   });
 
-  // (calculateLayout, 150)
+  const hasUsedMaxFloods = computed(() => {
+    return floods.value >= MAX_FLOODS;
+  });
+
   const playRound = throttle((newColor, tileToFlood) => {
     if (hasWon.value) {
       console.warn('The game is already won');
       return;
     }
 
-    if (clicks.value >= MAX_FLOODS) {
-      console.warn('Already used max clicks');
+    if (hasUsedMaxFloods.value) {
+      console.warn('Already used max floods');
       return;
     }
 
     const [x, y] = (tileToFlood || startTileId.value).split('-');
     const startTile = board[x][y];
+
+    if (startTile.colorKey === newColor) {
+      console.warn('Attempting to set same color');
+      return;
+    }
+
     floodFill(startTile, newColor);
 
-    clicks.value++;
+    floods.value++;
 
     checkIfWon();
   }, 300);
@@ -88,7 +106,7 @@ export const useGameState = function () {
 
     startTileId.value = '0-0';
     activeTileId.value = '';
-    clicks.value = 0;
+    floods.value = 0;
     hasWon.value = false;
   };
 
@@ -98,12 +116,12 @@ export const useGameState = function () {
 
   return {
     playRound,
-    clicks,
+    floods,
     hasWon,
-    instantiateGame,
+    newGame,
     board,
-    reset,
     startTileId,
+    hasUsedMaxFloods,
     activeTileId,
     removeAnimation,
     powerUpHelpText,

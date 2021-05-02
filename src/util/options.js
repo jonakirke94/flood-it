@@ -5,7 +5,7 @@ colors.set('RED', 'bg-red-500');
 colors.set('YELLOW', 'bg-yellow-500');
 colors.set('TEAL', 'bg-teal-500');
 colors.set('INDIGO', 'bg-indigo-500');
-colors.set('PINK', 'bg-pink-500');
+colors.set('PURPLE', 'bg-purple-900');
 
 const animations = new Map();
 
@@ -14,7 +14,7 @@ animations.set('RED', 'box-red');
 animations.set('YELLOW', 'box-yellow');
 animations.set('TEAL', 'box-teal');
 animations.set('INDIGO', 'box-indigo');
-animations.set('PINK', 'box-pink');
+animations.set('PURPLE', 'box-purple');
 
 export const GRID_SIZE = 15;
 export const MAX_FLOODS = 25;

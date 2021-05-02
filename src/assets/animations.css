@@ -82,18 +82,18 @@
 	}
   }
   
-  .box-pink {
-	animation: Box-fade-Pink var(--animation-duration) var(--animation-easing);
+  .box-purple {
+	animation: Box-fade-Purple var(--animation-duration) var(--animation-easing);
   }
   
-  @keyframes Box-fade-Pink {
+  @keyframes Box-fade-Purple {
 	0% {
-	  @apply bg-pink-300;
+	  @apply bg-purple-700;
 	}
 	50% {
-	  @apply bg-pink-400;
+	  @apply bg-purple-800;
 	}
 	100% {
-	  @apply bg-pink-500;
+	  @apply bg-purple-900;
 	}
   }

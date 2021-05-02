@@ -9,14 +9,17 @@
         >
           <icon-fire-outline v-if="powerUp.name === 'fire'" class="w-6 h-6"></icon-fire-outline>
           <icon-heart-outline v-else-if="powerUp.name === 'health'" class="w-6 h-6"></icon-heart-outline>
-          <icon-cloud-rain-outline v-else-if="powerUp.name === 'flag'" class="w-6 h-6"></icon-cloud-rain-outline>
+          <icon-arrow-circle-down-outline
+            v-else-if="powerUp.name === 'flag'"
+            class="w-6 h-6"
+          ></icon-arrow-circle-down-outline>
         </base-button>
       </li>
-
       <flood-button-fold-out
         :show="showColorButtons"
         :active-color="activeFireColor"
         @pressed="setActiveColor"
+        @close="resetPowerUpAction"
       ></flood-button-fold-out>
     </template>
   </ul>
@@ -29,7 +32,7 @@ import BaseButton from '../components/BaseButton.vue';
 
 import IconFireOutline from '../components/icons/IconFireOutline.vue';
 import IconHeartOutline from '../components/icons/IconHeartOutline.vue';
-import IconCloudRainOutline from './icons/IconCloudRainOutline.vue';
+import IconArrowCircleDownOutline from './icons/IconArrowCircleDownOutline.vue';
 
 import useGameState from '../composables/use-game-state';
 import usePowerUps from '../composables/use-power-ups';
@@ -39,7 +42,7 @@ export default {
   components: {
     IconFireOutline,
     IconHeartOutline,
-    IconCloudRainOutline,
+    IconArrowCircleDownOutline,
     FloodButtonFoldOut,
     BaseButton,
   },
@@ -89,7 +92,17 @@ export default {
       activePowerUpId.value = '';
     };
 
+    const resetPowerUpAction = () => {
+      activePowerUpId.value = '';
+      showColorButtons.value = false;
+    };
+
     const executePowerUp = (powerUp) => {
+      if (activePowerUpId.value === powerUp.id) {
+        resetPowerUpAction();
+        return;
+      }
+
       if (powerUp.type === 'INSTANT') {
         if (powerUp.name === 'health') {
           executeHealthPower(powerUp);
@@ -108,7 +121,7 @@ export default {
       }
     };
 
-    return { executePowerUp, showColorButtons, activeFireColor, activePowerUpId, hasWon };
+    return { executePowerUp, resetPowerUpAction, showColorButtons, activeFireColor, activePowerUpId, hasWon };
   },
   methods: {
     setActiveColor(color) {

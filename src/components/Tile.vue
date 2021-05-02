@@ -1,21 +1,28 @@
 <template>
   <div
-    class="relative text-white flex h-full w-full justify-center items-center text-xs"
-    :class="[backgroundClass, { [animationClass]: tile.animated }]"
+    class="relative text-white flex h-full w-full justify-center items-center text-xs transition-colors"
+    :class="[
+      backgroundClass,
+      { [animationClass]: tile.animated },
+      { 'hover:bg-gray-700 cursor-pointer': atTileSelectionState },
+    ]"
     :style="animationDelayStyle"
     @animationend="removeAnimation(tile)"
     @click="tileClicked"
   >
-    <icon-cloud-rain-outline
+    <icon-arrow-circle-down-outline
       v-if="tile.id === startTileId"
-      class="w-3 h-3 absolute left-1 top-1"
-    ></icon-cloud-rain-outline>
+      class="w-4 h-4 absolute transform -rotate-45 top-0.5 left-0.5"
+    ></icon-arrow-circle-down-outline>
 
     <template v-if="showPowerUpIcon">
       <icon-fire-outline v-if="tile?.powerUp?.name === 'fire'" class="w-4 h-4"></icon-fire-outline>
       <icon-heart-outline v-else-if="tile?.powerUp?.name === 'health'" class="w-4 h-4"></icon-heart-outline>
 
-      <icon-cloud-rain-outline v-else-if="tile?.powerUp?.name === 'flag'" class="w-4 h-4"></icon-cloud-rain-outline>
+      <icon-arrow-circle-down-outline
+        v-else-if="tile?.powerUp?.name === 'flag'"
+        class="w-4 h-4"
+      ></icon-arrow-circle-down-outline>
     </template>
   </div>
 </template>
@@ -23,7 +30,7 @@
 <script>
 import IconFireOutline from '../components/icons/IconFireOutline.vue';
 import IconHeartOutline from '../components/icons/IconHeartOutline.vue';
-import IconCloudRainOutline from './icons/IconCloudRainOutline.vue';
+import IconArrowCircleDownOutline from './icons/IconArrowCircleDownOutline.vue';
 
 import { COLORS, ANIMATIONS } from '../util/options';
 
@@ -36,7 +43,7 @@ export default {
   components: {
     IconFireOutline,
     IconHeartOutline,
-    IconCloudRainOutline,
+    IconArrowCircleDownOutline,
   },
   props: {
     tile: {
@@ -50,7 +57,7 @@ export default {
   },
   setup(props) {
     const { activeTileId, removeAnimation, startTileId } = useGameState();
-    const { executedPowerUps, turnedPowerUps } = usePowerUps();
+    const { executedPowerUps, turnedPowerUps, atTileSelectionState } = usePowerUps();
 
     const tileClicked = () => {
       activeTileId.value = props.tile.id;
@@ -84,6 +91,7 @@ export default {
       removeAnimation,
       showPowerUpIcon,
       animationDelayStyle,
+      atTileSelectionState,
     };
   },
 };

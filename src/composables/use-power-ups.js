@@ -27,7 +27,7 @@ export const usePowerUps = function () {
 
   // TODO need to calculate probabilities here
   const getPowerUp = () => {
-    const rnd = Math.floor(Math.random() * ((GRID_SIZE * GRID_SIZE) / 1.5 + 1));
+    const rnd = Math.floor(Math.random() * (GRID_SIZE + 1));
     if (rnd > POWER_UPS.length - 1) return '';
     const name = POWER_UPS[rnd];
     return createPowerUp(name);
@@ -46,6 +46,16 @@ export const usePowerUps = function () {
     }
   };
 
+  const atTileSelectionState = computed(() => {
+    if (activePowerUp.value) {
+      if (activePowerUp.value.name === 'flag') return true;
+
+      if (activePowerUp.value.name === 'fire' && activeFireColor.value) return true;
+    }
+
+    return false;
+  });
+
   const resetPowerUps = () => {
     turnedPowerUps.clear();
     executedPowerUps.clear();
@@ -61,6 +71,7 @@ export const usePowerUps = function () {
     activePowerUpId,
     activeFireColor,
     displayPowerUpList,
+    atTileSelectionState,
   };
 };
 

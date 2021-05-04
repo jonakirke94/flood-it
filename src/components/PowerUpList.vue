@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-col mb-auto items-center w-16 md:w-32 mt-24 rounded-md relative">
+  <ul class="flex flex-shrink-0 flex-col mb-auto items-center w-16 md:w-32 mt-24 rounded-md relative">
     <template v-if="!hasWon">
       <li v-for="(powerUp, index) in powerUps.values()" :key="index" class="mb-4">
         <base-button

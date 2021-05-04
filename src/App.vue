@@ -1,7 +1,7 @@
 <template>
-  <div class="max-w-screen-md h-screen mx-auto">
-    <div class="flex">
-      <div class="flex flex-1 flex-col">
+  <div class="h-screen max-h-screen mx-auto">
+    <div class="flex justify-center">
+      <div class="flex flex-col items-center">
         <game-header :count="floods" :max="MAX_FLOODS" @reset="newGame"></game-header>
 
         <tile-board :tiles="board"></tile-board>
@@ -20,6 +20,7 @@
 <script>
 import useGameState from './composables/use-game-state';
 import usePowerUps from './composables/use-power-ups';
+import useFireworks from './composables/use-fireworks';
 
 import FloodButtonList from './components/FloodButtonList.vue';
 import PowerUpList from './components/PowerUpList.vue';
@@ -40,6 +41,8 @@ export default {
   setup() {
     const { newGame, playRound, floods, hasWon, board, powerUpHelpText, hasUsedMaxFloods } = useGameState();
     const { displayPowerUpList, resetPowerUps, activePowerUpId } = usePowerUps();
+
+    useFireworks(hasWon);
 
     newGame();
 
@@ -71,5 +74,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   @apply bg-gray-800 min-h-screen text-white;
+}
+
+body,
+html {
+  width: 100%;
+  position: fixed;
 }
 </style>

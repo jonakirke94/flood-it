@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative text-white flex h-full w-full justify-center items-center text-xs border-2 border-transparent"
+    class="relative text-white tile flex justify-center items-center text-xs border-2 border-transparent"
     :class="[
       backgroundClass,
       { [animationClass]: tile.animated },
@@ -54,6 +54,10 @@ export default {
       type: [Object, String],
       default: () => null,
     },
+    size: {
+      type: Number,
+      default: 10,
+    },
   },
   setup(props) {
     const { activeTileId, removeAnimation, startTileId } = useGameState();
@@ -80,6 +84,8 @@ export default {
     const animationDelayStyle = computed(() => {
       return {
         'animation-delay': `${props.tile.animationDelay}ms`,
+        height: `${props.size}px`,
+        width: `${props.size}px`,
       };
     });
 
@@ -97,4 +103,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.tile {
+  aspect-ratio: 1;
+}
+</style>

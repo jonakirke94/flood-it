@@ -10,6 +10,12 @@ let activeFireColor = ref('');
 
 const POWER_UPS = ['fire', 'flag', 'health'];
 
+/*const POWER_UP_LIMIT = {
+  fire: 1,
+  flag: 1,
+  health: 3,
+};*/
+
 export const usePowerUps = function () {
   const { generateId } = useId();
 
@@ -30,6 +36,9 @@ export const usePowerUps = function () {
     const rnd = Math.floor(Math.random() * (GRID_SIZE + 1));
     if (rnd > POWER_UPS.length - 1) return '';
     const name = POWER_UPS[rnd];
+
+    // if ()
+
     return createPowerUp(name);
   };
 

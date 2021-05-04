@@ -1,5 +1,5 @@
 <template>
-  <span class="relative flex justify-center items-center mt-6 md:mt-12">
+  <span class="relative flex justify-center items-center h-32">
     <span
       v-if="disabled && msg"
       class="absolute px-4 py-2.5 bg-white text-gray-700 rounded-md w-96 z-10 text-xl font-semibold"

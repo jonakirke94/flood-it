@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center h-24">
+  <div class="flex justify-between w-full items-center h-24">
     <h1 class="text-3xl font-extrabold text-gray-100 md:ml-0 ml-4">Floods {{ count }}/{{ max }}</h1>
 
     <div class="flex space-x-4">

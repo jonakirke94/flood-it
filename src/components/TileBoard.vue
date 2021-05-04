@@ -1,6 +1,6 @@
 <template>
-  <div ref="root" class="w-full" :style="styles">
-    <tile v-for="tile in tiles.flat()" :key="tile.id" :tile="tile"></tile>
+  <div ref="root" class="tileboard" :style="styles">
+    <tile v-for="tile in tiles.flat()" :key="tile.id" :size="tileSize" :tile="tile"></tile>
   </div>
 </template>
 
@@ -24,16 +24,16 @@ export default {
     },
   },
   setup() {
-    let boardHeight = ref(0);
     let root = ref();
+    let tileSize = ref(0);
 
-    const getBoardWidth = () => {
-      const width = root.value.clientWidth;
-      boardHeight.value = width;
+    const getBoardHeight = () => {
+      const size = root.value.clientHeight;
+      tileSize.value = size / GRID_SIZE;
     };
 
     onMounted(() => {
-      getBoardWidth();
+      getBoardHeight();
     });
 
     const styles = computed(() => {
@@ -41,11 +41,11 @@ export default {
         display: 'grid',
         'grid-template-columns': `repeat(${GRID_SIZE}, 1fr)`,
         'grid-template-rows': `repeat(${GRID_SIZE}, 1fr)`,
-        height: `${boardHeight.value}px`,
+        width: `${GRID_SIZE * tileSize.value}px`,
       };
     });
 
-    const fnc = debounce(getBoardWidth, 100);
+    const fnc = debounce(getBoardHeight, 100);
     window.addEventListener('resize', fnc);
 
     onUnmounted(() => {
@@ -54,8 +54,16 @@ export default {
 
     return {
       styles,
+      tileSize,
       root,
     };
   },
 };
 </script>
+
+<style scoped>
+.tileboard {
+  max-height: calc(100vh - 14rem);
+  height: calc(100vh - 14rem);
+}
+</style>

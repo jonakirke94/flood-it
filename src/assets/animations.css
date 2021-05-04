@@ -50,19 +50,19 @@
 	}
   }
   
-  .box-teal {
-	animation: Box-fade-Teal var(--animation-duration) var(--animation-easing);
+  .box-pink {
+	animation: Box-fade-Pink var(--animation-duration) var(--animation-easing);
   }
   
-  @keyframes Box-fade-Teal {
+  @keyframes Box-fade-Pink {
 	0% {
-	  @apply bg-teal-300;
+	  @apply bg-pink-200;
 	}
 	50% {
-	  @apply bg-teal-400;
+	  @apply bg-pink-300;
 	}
 	100% {
-	  @apply bg-teal-500;
+	  @apply bg-pink-400;
 	}
   }
   

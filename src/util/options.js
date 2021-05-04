@@ -3,7 +3,7 @@ const colors = new Map();
 colors.set('GREEN', 'bg-green-500');
 colors.set('RED', 'bg-red-500');
 colors.set('YELLOW', 'bg-yellow-500');
-colors.set('TEAL', 'bg-teal-500');
+colors.set('PINK', 'bg-pink-400');
 colors.set('INDIGO', 'bg-indigo-500');
 colors.set('PURPLE', 'bg-purple-900');
 
@@ -12,7 +12,7 @@ const animations = new Map();
 animations.set('GREEN', 'box-green');
 animations.set('RED', 'box-red');
 animations.set('YELLOW', 'box-yellow');
-animations.set('TEAL', 'box-teal');
+animations.set('PINK', 'box-pink');
 animations.set('INDIGO', 'box-indigo');
 animations.set('PURPLE', 'box-purple');
 

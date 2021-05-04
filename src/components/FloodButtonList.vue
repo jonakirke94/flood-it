@@ -9,7 +9,7 @@
       <base-button class="bg-green-500" @click="$emit('fill-pressed', 'GREEN')">q</base-button>
       <base-button class="bg-red-500" @click="$emit('fill-pressed', 'RED')">w</base-button>
       <base-button class="bg-yellow-500" @click="$emit('fill-pressed', 'YELLOW')">e</base-button>
-      <base-button class="bg-teal-500" @click="$emit('fill-pressed', 'TEAL')">r</base-button>
+      <base-button class="bg-pink-400" @click="$emit('fill-pressed', 'PINK')">r</base-button>
       <base-button class="bg-indigo-500" @click="$emit('fill-pressed', 'INDIGO')">t</base-button>
       <base-button class="bg-purple-900" @click="$emit('fill-pressed', 'PURPLE')">y</base-button>
     </div>
@@ -41,7 +41,7 @@ export default {
       { key: 'q', fn: () => emit('fill-pressed', 'GREEN') },
       { key: 'w', fn: () => emit('fill-pressed', 'RED') },
       { key: 'e', fn: () => emit('fill-pressed', 'YELLOW') },
-      { key: 'r', fn: () => emit('fill-pressed', 'TEAL') },
+      { key: 'r', fn: () => emit('fill-pressed', 'PINK') },
       { key: 't', fn: () => emit('fill-pressed', 'INDIGO') },
       { key: 'y', fn: () => emit('fill-pressed', 'PURPLE') },
     ]);

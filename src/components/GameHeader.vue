@@ -87,7 +87,7 @@ export default {
   },
   emits: ['reset'],
   setup() {
-    let showInfo = ref(false);
+    let showInfo = ref(true);
 
     return {
       showInfo,

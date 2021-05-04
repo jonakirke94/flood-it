@@ -57,7 +57,7 @@ export default {
   },
   emits: ['close'],
   setup(props, { emit }) {
-    const showModal = ref(false);
+    const showModal = ref(true);
     const modal = ref(null);
     const { onClickOutside } = useClickOutside();
 

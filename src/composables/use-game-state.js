@@ -59,11 +59,11 @@ export const useGameState = function () {
     if (!activePowerUp.value) return '';
 
     if (activePowerUp.value.name === 'fire') {
-      return activeFireColor.value ? 'Select a cell to flood' : 'Select a color';
+      return activeFireColor.value ? 'Select a tile to flood' : 'Select a color';
     }
 
     if (activePowerUp.value.name === 'flag') {
-      return 'Select a new spring';
+      return 'Select a new starting position';
     }
 
     return '';

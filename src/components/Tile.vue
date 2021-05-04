@@ -1,10 +1,10 @@
 <template>
   <div
-    class="relative text-white flex h-full w-full justify-center items-center text-xs transition-colors"
+    class="relative text-white flex h-full w-full justify-center items-center text-xs border-2 border-transparent"
     :class="[
       backgroundClass,
       { [animationClass]: tile.animated },
-      { 'hover:bg-gray-700 cursor-pointer': atTileSelectionState },
+      { 'hover:border-black cursor-pointer': atTileSelectionState },
     ]"
     :style="animationDelayStyle"
     @animationend="removeAnimation(tile)"

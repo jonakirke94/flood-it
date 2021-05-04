@@ -16,7 +16,7 @@ const NEIGHBOUR_MAP = {
 
 let useNeighbours = (board) => {
   const isValidNeighbour = (nb, x, y) => {
-    return NEIGHBOUR_MAP.get(nb)(x, y);
+    return NEIGHBOUR_MAP[nb](x, y);
   };
 
   const getValidNeighbours = (x, y) => {

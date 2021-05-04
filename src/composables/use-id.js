@@ -1,9 +1,11 @@
+const PREFIX = 'flood-it';
+
 let counter = 0;
 
 let useId = () => {
   const generateId = () => {
     counter++;
-    return `floodit-${counter}`;
+    return `${PREFIX}${counter}`;
   };
 
   return {

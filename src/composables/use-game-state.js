@@ -1,14 +1,15 @@
+import throttle from 'lodash.throttle';
+
 import { ref, reactive, computed } from 'vue';
 
 import { GRID_SIZE, MAX_FLOODS } from '../util/options';
 import { randomColorKey } from '../util/ui-helpers';
 
 import usePowerUps from './use-power-ups';
-import throttle from 'lodash.throttle';
 import useFloodIt from './use-flood-it';
 
-let board = reactive([]);
-let startTileId = ref('0-0');
+const board = reactive([]);
+const startTileId = ref('0-0');
 const floods = ref(0);
 const activeTileId = ref('');
 const hasWon = ref(false);

@@ -7,15 +7,16 @@ const NEIGHBOUR = {
   RIGHT: 'right',
 };
 
-const neighbourValidator = new Map();
-neighbourValidator.set(NEIGHBOUR.LEFT, (_x, y) => y >= 0);
-neighbourValidator.set(NEIGHBOUR.TOP, (x, _y) => x >= 0);
-neighbourValidator.set(NEIGHBOUR.BOTTOM, (x, _y) => x < GRID_SIZE);
-neighbourValidator.set(NEIGHBOUR.RIGHT, (_x, y) => y < GRID_SIZE);
+const NEIGHBOUR_MAP = {
+  [NEIGHBOUR.LEFT]: (_x, y) => y >= 0,
+  [NEIGHBOUR.TOP]: (x, _y) => x >= 0,
+  [NEIGHBOUR.BOTTOM]: (x, _y) => x < GRID_SIZE,
+  [NEIGHBOUR.RIGHT]: (_x, y) => y < GRID_SIZE,
+};
 
 let useNeighbours = (board) => {
   const isValidNeighbour = (nb, x, y) => {
-    return neighbourValidator.get(nb)(x, y);
+    return NEIGHBOUR_MAP.get(nb)(x, y);
   };
 
   const getValidNeighbours = (x, y) => {

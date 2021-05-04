@@ -3,11 +3,11 @@ import useId from './use-id';
 
 import { GRID_SIZE } from '../util/options';
 
-let turnedPowerUps = reactive(new Map());
-let executedPowerUps = reactive(new Set());
+const turnedPowerUps = reactive(new Map());
+const executedPowerUps = reactive(new Set());
+const activePowerUpId = ref('');
+const activeFireColor = ref('');
 let powerUpNames = reactive([]);
-let activePowerUpId = ref('');
-let activeFireColor = ref('');
 
 const POWER_UPS = ['fire', 'flag', 'health'];
 
@@ -75,8 +75,10 @@ export const usePowerUps = function () {
 
   const resetPowerUps = () => {
     turnedPowerUps.clear();
-    powerUpNames = [];
     executedPowerUps.clear();
+    powerUpNames = [];
+    activePowerUpId.value = '';
+    activeFireColor.value = '';
   };
 
   return {

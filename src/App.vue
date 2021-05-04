@@ -40,7 +40,7 @@ export default {
   },
   setup() {
     const { newGame, playRound, floods, hasWon, board, powerUpHelpText, hasUsedMaxFloods } = useGameState();
-    const { displayPowerUpList, resetPowerUps, activePowerUpId } = usePowerUps();
+    const { displayPowerUpList, activePowerUpId } = usePowerUps();
 
     useFireworks(hasWon);
 

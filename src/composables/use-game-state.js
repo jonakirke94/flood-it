@@ -38,7 +38,7 @@ export const useGameState = function () {
         }
 
         // make sure we dont have powerups on start colors
-        const powerUp = colorKey === startColor ? '' : getPowerUp();
+        const powerUp = colorKey === startColor ? '' : getPowerUp(x * y);
         row.push({
           animated: false,
           animationDelay: 0,

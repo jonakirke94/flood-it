@@ -2,16 +2,16 @@
   <div class="flex justify-between w-full items-center h-24">
     <h1 class="text-3xl font-extrabold text-gray-100 md:ml-0 ml-4">Floods {{ count }}/{{ max }}</h1>
 
-    <div class="flex space-x-4">
+    <div class="flex space-x-4 mt-2">
       <button
-        class="px-4 py-2 bg-gray-900 focus:outline-none bg-transparent text-sm rounded-md transition-colors hover:text-white"
+        class="px-4 py-2 focus:outline-none bg-transparent text-sm rounded-md transition-colors hover:text-white"
         @click="showInfo = !showInfo"
       >
         <icon-information-circle-outline class="w-4 h-4"></icon-information-circle-outline>
       </button>
 
       <button
-        class="px-4 py-2 bg-gray-900 focus:outline-none bg-transparent text-sm rounded-md transition-colors hover:text-white"
+        class="px-4 py-2 focus:outline-none bg-transparent text-sm rounded-md transition-colors hover:text-white"
         @click="$emit('reset')"
       >
         <icon-refresh-outline class="w-4 h-4"></icon-refresh-outline>

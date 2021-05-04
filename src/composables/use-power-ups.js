@@ -5,16 +5,17 @@ import { GRID_SIZE } from '../util/options';
 
 let turnedPowerUps = reactive(new Map());
 let executedPowerUps = reactive(new Set());
+let powerUpNames = reactive([]);
 let activePowerUpId = ref('');
 let activeFireColor = ref('');
 
 const POWER_UPS = ['fire', 'flag', 'health'];
 
-/*const POWER_UP_LIMIT = {
+const POWER_UP_LIMIT = {
   fire: 1,
   flag: 1,
   health: 3,
-};*/
+};
 
 export const usePowerUps = function () {
   const { generateId } = useId();
@@ -31,13 +32,20 @@ export const usePowerUps = function () {
     };
   };
 
-  // TODO need to calculate probabilities here
-  const getPowerUp = () => {
-    const rnd = Math.floor(Math.random() * (GRID_SIZE + 1));
+  const hasExceedLimit = (name) => {
+    return powerUpNames.filter((pw) => pw === name).length >= POWER_UP_LIMIT[name];
+  };
+
+  const getPowerUp = (multiplier) => {
+    // favour tiles towards bottom right
+    const randomFactor = (GRID_SIZE * GRID_SIZE) / 2 - multiplier;
+    const rnd = Math.floor(Math.random() * (randomFactor + 1));
     if (rnd > POWER_UPS.length - 1) return '';
     const name = POWER_UPS[rnd];
 
-    // if ()
+    if (hasExceedLimit(name)) return '';
+
+    powerUpNames.push(name);
 
     return createPowerUp(name);
   };
@@ -67,6 +75,7 @@ export const usePowerUps = function () {
 
   const resetPowerUps = () => {
     turnedPowerUps.clear();
+    powerUpNames = [];
     executedPowerUps.clear();
   };
 

@@ -54,10 +54,6 @@ export default {
       type: [Object, String],
       default: () => null,
     },
-    size: {
-      type: Number,
-      default: 10,
-    },
   },
   setup(props) {
     const { activeTileId, removeAnimation, startTileId } = useGameState();
@@ -84,8 +80,6 @@ export default {
     const animationDelayStyle = computed(() => {
       return {
         'animation-delay': `${props.tile.animationDelay}ms`,
-        height: `${props.size}px`,
-        width: `${props.size}px`,
       };
     });
 
@@ -102,9 +96,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.tile {
-  aspect-ratio: 1;
-}
-</style>

@@ -1,7 +1,7 @@
 <template>
-  <div class="h-screen max-h-screen mx-auto">
-    <div class="flex justify-center">
-      <div class="flex flex-col items-center">
+  <div class="h-screen mx-auto">
+    <div class="h-screen w-full flex justify-center">
+      <div class="flex flex-col w-full max-w-screen-md items-center">
         <game-header :count="floods" :max="MAX_FLOODS" @reset="newGame"></game-header>
 
         <tile-board :tiles="board"></tile-board>
@@ -73,7 +73,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  @apply bg-gray-800 min-h-screen text-white;
+  @apply bg-gray-800 text-white;
 }
 
 body,

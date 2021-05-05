@@ -9,7 +9,6 @@
   "dependencies": {
     "eslint-plugin-prettier": "^3.4.0",
     "fireworks": "^2.2.7",
-    "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "vue": "^3.0.5"
   },

@@ -6,12 +6,24 @@
       >{{ msg }}</span
     >
     <div class="space-x-4" :class="{ 'filter blur-sm pointer-events-none': disabled }">
-      <base-button class="bg-green-500" @click="$emit('fill-pressed', 'GREEN')">q</base-button>
-      <base-button class="bg-red-500" @click="$emit('fill-pressed', 'RED')">w</base-button>
-      <base-button class="bg-yellow-500" @click="$emit('fill-pressed', 'YELLOW')">e</base-button>
-      <base-button class="bg-pink-400" @click="$emit('fill-pressed', 'PINK')">r</base-button>
-      <base-button class="bg-indigo-500" @click="$emit('fill-pressed', 'INDIGO')">t</base-button>
-      <base-button class="bg-purple-900" @click="$emit('fill-pressed', 'PURPLE')">y</base-button>
+      <base-button class="bg-green-500" @click="$emit('fill-pressed', 'GREEN')">
+        <span class="hidden md:block">q</span>
+      </base-button>
+      <base-button class="bg-red-500" @click="$emit('fill-pressed', 'RED')">
+        <span class="hidden md:block">w</span></base-button
+      >
+      <base-button class="bg-yellow-500" @click="$emit('fill-pressed', 'YELLOW')">
+        <span class="hidden md:block">e</span></base-button
+      >
+      <base-button class="bg-pink-400" @click="$emit('fill-pressed', 'PINK')">
+        <span class="hidden md:block">r</span></base-button
+      >
+      <base-button class="bg-indigo-500" @click="$emit('fill-pressed', 'INDIGO')">
+        <span class="hidden md:block">t</span></base-button
+      >
+      <base-button class="bg-purple-900" @click="$emit('fill-pressed', 'PURPLE')">
+        <span class="hidden md:block">t</span></base-button
+      >
     </div>
   </span>
 </template>

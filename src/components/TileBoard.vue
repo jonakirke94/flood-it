@@ -1,17 +1,15 @@
 <template>
-  <div ref="root" class="tileboard" :style="styles">
-    <tile v-for="tile in tiles.flat()" :key="tile.id" :size="tileSize" :tile="tile"></tile>
+  <div class="tileboard" :style="styles">
+    <tile v-for="tile in tiles.flat()" :key="tile.id" :tile="tile"></tile>
   </div>
 </template>
 
 <script>
 import Tile from '../components/Tile.vue';
 
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { computed } from 'vue';
 
 import { GRID_SIZE } from '../util/options';
-
-import debounce from 'lodash.debounce';
 
 export default {
   components: {
@@ -24,38 +22,14 @@ export default {
     },
   },
   setup() {
-    let root = ref();
-    let tileSize = ref(0);
-
-    const getBoardHeight = () => {
-      const size = root.value.clientHeight;
-      tileSize.value = size / GRID_SIZE;
-    };
-
-    onMounted(() => {
-      getBoardHeight();
-    });
-
     const styles = computed(() => {
       return {
-        display: 'grid',
         'grid-template-columns': `repeat(${GRID_SIZE}, 1fr)`,
         'grid-template-rows': `repeat(${GRID_SIZE}, 1fr)`,
-        width: `${GRID_SIZE * tileSize.value}px`,
       };
     });
-
-    const fnc = debounce(getBoardHeight, 100);
-    window.addEventListener('resize', fnc);
-
-    onUnmounted(() => {
-      window.removeEventListener('resize', fnc);
-    });
-
     return {
       styles,
-      tileSize,
-      root,
     };
   },
 };
@@ -63,7 +37,19 @@ export default {
 
 <style scoped>
 .tileboard {
+  display: grid;
+  width: calc(100% - 4rem);
   max-height: calc(100vh - 14rem);
   height: calc(100vh - 14rem);
+}
+.tileboard > * {
+  width: 100%;
+}
+.tileboard > *::before {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 0;
+  padding-bottom: 100%;
 }
 </style>

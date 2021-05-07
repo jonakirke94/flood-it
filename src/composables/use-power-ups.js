@@ -38,7 +38,7 @@ export const usePowerUps = function () {
 
   const getPowerUp = (multiplier) => {
     // favour tiles towards bottom right
-    const randomFactor = (GRID_SIZE * GRID_SIZE) / 2 - multiplier;
+    const randomFactor = Math.abs((GRID_SIZE * GRID_SIZE) / 2 - multiplier);
     const rnd = Math.floor(Math.random() * (randomFactor + 1));
     if (rnd > POWER_UPS.length - 1) return '';
     const name = POWER_UPS[rnd];

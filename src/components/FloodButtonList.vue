@@ -22,7 +22,7 @@
         <span class="hidden md:block">t</span></base-button
       >
       <base-button class="bg-purple-900" @click="$emit('fill-pressed', 'PURPLE')">
-        <span class="hidden md:block">t</span></base-button
+        <span class="hidden md:block">y</span></base-button
       >
     </div>
   </span>
